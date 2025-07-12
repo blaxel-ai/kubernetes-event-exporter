@@ -1,6 +1,6 @@
 package exporter
 
-import "github.com/resmoio/kubernetes-event-exporter/pkg/kube"
+import "github.com/blaxel-ai/kubernetes-event-exporter/pkg/kube"
 
 type Router struct {
 	cfg  *Config

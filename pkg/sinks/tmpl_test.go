@@ -1,11 +1,12 @@
 package sinks
 
 import (
-	"github.com/resmoio/kubernetes-event-exporter/pkg/kube"
-	"github.com/stretchr/testify/require"
-	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"testing"
 	"time"
+
+	"github.com/blaxel-ai/kubernetes-event-exporter/pkg/kube"
+	"github.com/stretchr/testify/require"
+	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
 func TestLayoutConvert(t *testing.T) {
@@ -18,8 +19,7 @@ func TestLayoutConvert(t *testing.T) {
 	ev.FirstTimestamp = v1.Time{Time: time.Now()}
 
 	// Because Go, when parsing yaml, its []interface, not []string
-	var tagz interface{}
-	tagz = make([]interface{}, 2)
+	var tagz interface{} = make([]interface{}, 2)
 	tagz.([]interface{})[0] = "sre"
 	tagz.([]interface{})[1] = "ops"
 

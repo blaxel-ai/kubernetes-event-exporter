@@ -10,8 +10,8 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/Shopify/sarama"
-	"github.com/resmoio/kubernetes-event-exporter/pkg/kube"
+	"github.com/IBM/sarama"
+	"github.com/blaxel-ai/kubernetes-event-exporter/pkg/kube"
 	"github.com/rs/zerolog/log"
 
 	"github.com/xdg-go/scram"

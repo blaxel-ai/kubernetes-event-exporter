@@ -6,7 +6,7 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/resmoio/kubernetes-event-exporter/pkg/kube"
+	"github.com/blaxel-ai/kubernetes-event-exporter/pkg/kube"
 	"github.com/stretchr/testify/assert"
 )
 

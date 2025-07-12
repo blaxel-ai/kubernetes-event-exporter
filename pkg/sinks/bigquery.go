@@ -2,19 +2,20 @@ package sinks
 
 import (
 	"bufio"
-	"cloud.google.com/go/bigquery"
 	"context"
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/resmoio/kubernetes-event-exporter/pkg/batch"
-	"github.com/resmoio/kubernetes-event-exporter/pkg/kube"
-	"github.com/rs/zerolog/log"
-	"google.golang.org/api/option"
 	"math/rand"
 	"os"
 	"time"
 	"unicode"
+
+	"cloud.google.com/go/bigquery"
+	"github.com/blaxel-ai/kubernetes-event-exporter/pkg/batch"
+	"github.com/blaxel-ai/kubernetes-event-exporter/pkg/kube"
+	"github.com/rs/zerolog/log"
+	"google.golang.org/api/option"
 )
 
 // Returns a map filtering out keys that have nil value assigned.
@@ -72,7 +73,9 @@ func bigQueryWriteBatchToJsonFile(items []interface{}, path string) error {
 	for i := 0; i < len(items); i++ {
 		event := items[i].(*kube.EnhancedEvent)
 		var mapStruct map[string]interface{}
-		json.Unmarshal(event.ToJSON(), &mapStruct)
+		if err := json.Unmarshal(event.ToJSON(), &mapStruct); err != nil {
+			return fmt.Errorf("failed to unmarshal event: %v", err)
+		}
 		jsonBytes, _ := json.Marshal(bigQuerySanitizeKeys(bigQueryDropNils(mapStruct)))
 		fmt.Fprintln(writer, string(jsonBytes))
 	}
@@ -181,13 +184,15 @@ func NewBigQuerySink(cfg *BigQueryConfig) (*BigQuerySink, error) {
 		cfg.TimeoutSeconds = 60
 	}
 
-	rand.Seed(time.Now().UTC().UnixNano())
+	// Create a new random source with current time
+	r := rand.New(rand.NewSource(time.Now().UTC().UnixNano()))
+
 	handleBatch := func(ctx context.Context, items []interface{}) []bool {
 		res := make([]bool, len(items))
 		for i := 0; i < len(items); i++ {
 			res[i] = true
 		}
-		path := fmt.Sprintf("/tmp/bq_batch-%d-%04x.json", time.Now().UTC().Unix(), rand.Uint64()%65535)
+		path := fmt.Sprintf("/tmp/bq_batch-%d-%04x.json", time.Now().UTC().Unix(), r.Uint64()%65535)
 		if err := bigQueryWriteBatchToJsonFile(items, path); err != nil {
 			log.Error().Msgf("Failed to write JSON file: %v", err)
 		}

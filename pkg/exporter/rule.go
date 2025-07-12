@@ -3,7 +3,7 @@ package exporter
 import (
 	"regexp"
 
-	"github.com/resmoio/kubernetes-event-exporter/pkg/kube"
+	"github.com/blaxel-ai/kubernetes-event-exporter/pkg/kube"
 )
 
 // matchString is a method to clean the code. Error handling is omitted here because these
@@ -58,7 +58,7 @@ func (r *Rule) MatchesEvent(ev *kube.EnhancedEvent) bool {
 	}
 
 	// Labels are also mutually exclusive, they all need to be present
-	if r.Labels != nil && len(r.Labels) > 0 {
+	if len(r.Labels) > 0 {
 		for k, v := range r.Labels {
 			if val, ok := ev.InvolvedObject.Labels[k]; !ok {
 				return false
@@ -72,7 +72,7 @@ func (r *Rule) MatchesEvent(ev *kube.EnhancedEvent) bool {
 	}
 
 	// Annotations are also mutually exclusive, they all need to be present
-	if r.Annotations != nil && len(r.Annotations) > 0 {
+	if len(r.Annotations) > 0 {
 		for k, v := range r.Annotations {
 			if val, ok := ev.InvolvedObject.Annotations[k]; !ok {
 				return false

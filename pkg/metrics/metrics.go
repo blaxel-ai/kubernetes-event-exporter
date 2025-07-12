@@ -1,16 +1,18 @@
 package metrics
 
 import (
+	"context"
 	"fmt"
+	"log/slog"
 	"net/http"
 	"time"
 
+	"github.com/blaxel-ai/kubernetes-event-exporter/pkg/version"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/collectors"
 	"github.com/prometheus/client_golang/prometheus/promauto"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"github.com/prometheus/exporter-toolkit/web"
-	"github.com/resmoio/kubernetes-event-exporter/pkg/version"
 	"github.com/rs/zerolog/log"
 )
 
@@ -24,17 +26,35 @@ type Store struct {
 	KubeApiReadRequests  prometheus.Counter
 }
 
-// promLogger implements promhttp.Logger
-type promLogger struct{}
+// slogAdapter adapts zerolog to slog for exporter-toolkit
+type slogAdapter struct{}
 
-func (pl promLogger) Println(v ...interface{}) {
-	log.Logger.Error().Msg(fmt.Sprint(v...))
+func (s *slogAdapter) Enabled(ctx context.Context, level slog.Level) bool {
+	return true
 }
 
-// promLogger implements the Logger interface
-func (pl promLogger) Log(v ...interface{}) error {
-	log.Logger.Info().Msg(fmt.Sprint(v...))
+func (s *slogAdapter) Handle(ctx context.Context, record slog.Record) error {
+	// Map slog levels to zerolog levels
+	msg := record.Message
+	switch record.Level {
+	case slog.LevelDebug:
+		log.Logger.Debug().Msg(msg)
+	case slog.LevelInfo:
+		log.Logger.Info().Msg(msg)
+	case slog.LevelWarn:
+		log.Logger.Warn().Msg(msg)
+	case slog.LevelError:
+		log.Logger.Error().Msg(msg)
+	}
 	return nil
+}
+
+func (s *slogAdapter) WithAttrs(attrs []slog.Attr) slog.Handler {
+	return s
+}
+
+func (s *slogAdapter) WithGroup(name string) slog.Handler {
+	return s
 }
 
 func Init(addr string, tlsConf string) {
@@ -42,7 +62,6 @@ func Init(addr string, tlsConf string) {
 	// Add Go module build info.
 	prometheus.MustRegister(collectors.NewBuildInfoCollector())
 
-	promLogger := promLogger{}
 	metricsPath := "/metrics"
 
 	// Expose the registered metrics via HTTP.
@@ -85,8 +104,15 @@ func Init(addr string, tlsConf string) {
 		WebConfigFile:      &tlsConf,
 	}
 
+	// Create a slog.Logger that uses our zerolog
+	slogLogger := slog.New(&slogAdapter{})
+
 	// start up the http listener to expose the metrics
-	go web.ListenAndServe(&metricsServer, &metricsFlags, promLogger)
+	go func() {
+		if err := web.ListenAndServe(&metricsServer, &metricsFlags, slogLogger); err != nil {
+			log.Error().Err(err).Msg("Error starting metrics server")
+		}
+	}()
 }
 
 func NewMetricsStore(name_prefix string) *Store {

@@ -4,7 +4,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/resmoio/kubernetes-event-exporter/pkg/metrics"
+	"github.com/blaxel-ai/kubernetes-event-exporter/pkg/metrics"
 	"github.com/rs/zerolog/log"
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/errors"
@@ -49,15 +49,31 @@ func NewEventWatcher(config *rest.Config, namespace string, MaxEventAgeSeconds i
 		clientset:           clientset,
 	}
 
-	informer.AddEventHandler(watcher)
-	informer.SetWatchErrorHandler(func(r *cache.Reflector, err error) {
-		watcher.metricsStore.WatchErrors.Inc()
+	// Add the event handler
+	_, err := informer.AddEventHandler(cache.ResourceEventHandlerFuncs{
+		AddFunc: func(obj interface{}) {
+			watcher.OnAdd(obj, false)
+		},
+		UpdateFunc: watcher.OnUpdate,
+		DeleteFunc: watcher.OnDelete,
 	})
+	if err != nil {
+		log.Error().Err(err).Msg("Failed to add event handler to informer")
+	}
+
+	// Set watch error handler
+	err = informer.SetWatchErrorHandler(func(r *cache.Reflector, err error) {
+		watcher.metricsStore.WatchErrors.Inc()
+		log.Error().Err(err).Msg("watch error received")
+	})
+	if err != nil {
+		log.Error().Err(err).Msg("Failed to set watch error handler")
+	}
 
 	return watcher
 }
 
-func (e *EventWatcher) OnAdd(obj interface{}) {
+func (e *EventWatcher) OnAdd(obj interface{}, isInInitialList bool) {
 	event := obj.(*corev1.Event)
 	e.onEvent(event)
 }

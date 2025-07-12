@@ -9,7 +9,7 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/resmoio/kubernetes-event-exporter/pkg/kube"
+	"github.com/blaxel-ai/kubernetes-event-exporter/pkg/kube"
 )
 
 type TeamsConfig struct {
@@ -37,7 +37,9 @@ func (w *Teams) Send(ctx context.Context, ev *kube.EnhancedEvent) error {
 	}
 
 	var eventData map[string]interface{}
-	json.Unmarshal([]byte(event), &eventData)
+	if err := json.Unmarshal([]byte(event), &eventData); err != nil {
+		return fmt.Errorf("failed to unmarshal event: %v", err)
+	}
 	output := fmt.Sprintf("Event: %s \nStatus: %s \nMetadata: %s", eventData["message"], eventData["reason"], eventData["metadata"])
 
 	reqBody, err := json.Marshal(map[string]string{
