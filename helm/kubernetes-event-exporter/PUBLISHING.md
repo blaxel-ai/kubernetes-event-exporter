@@ -6,7 +6,8 @@ This document describes how the Helm chart is automatically published via GitHub
 
 The Helm chart is automatically packaged and published to GitHub Pages whenever:
 1. Code is pushed to the `main` branch (development versions)
-2. A new release is created on GitHub (stable versions)
+2. Code is pushed to the `develop` branch (development versions with `-dev-` prefix)
+3. A new release is created on GitHub (stable versions)
 
 ## How It Works
 
@@ -14,7 +15,9 @@ The Helm chart is automatically packaged and published to GitHub Pages whenever:
 
 The Helm chart publishing is integrated into the main CI/CD workflows:
 
-- **`.github/workflows/build.yml`**: On push to main, creates a development version with the commit SHA (e.g., `0.1.0-abc1234`)
+- **`.github/workflows/build.yml`**: 
+  - On push to main: creates a development version with the commit SHA (e.g., `0.1.0-abc1234`)
+  - On push to develop: creates a development version with `-dev-` prefix (e.g., `0.1.0-dev-abc1234`)
 - **`.github/workflows/release.yml`**: On release, creates a stable version matching the release tag (e.g., `1.0.0`)
 
 ### 2. GitHub Pages Setup
@@ -51,12 +54,17 @@ https://<owner>.github.io/<repo-name>
 
 ### Development Versions (Automatic)
 
-Simply push changes to the `helm/` directory on `main`:
+Push changes to the `helm/` directory on either `main` or `develop`:
 
 ```bash
 git add helm/
 git commit -m "feat: Update Helm chart"
+
+# For main branch versions (0.1.0-abc1234)
 git push origin main
+
+# For develop branch versions (0.1.0-dev-abc1234)
+git push origin develop
 ```
 
 ### Stable Versions (Via Release)
@@ -113,7 +121,8 @@ The workflow automatically handles versioning:
 ## Version Strategy
 
 - **Stable releases**: Match git tags (e.g., `v1.0.0` → `1.0.0`)
-- **Development builds**: Base version + commit SHA (e.g., `0.1.0-abc1234`)
+- **Main branch builds**: Base version + commit SHA (e.g., `0.1.0-abc1234`)
+- **Develop branch builds**: Base version + `-dev-` + commit SHA (e.g., `0.1.0-dev-abc1234`)
 
 ## Security Notes
 

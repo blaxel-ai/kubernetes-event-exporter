@@ -9,8 +9,10 @@ The Helm chart publishing has been integrated into the existing CI/CD workflows 
 ### ✅ Integrated Workflows
 
 1. **`.github/workflows/build.yml`**
-   - Added `helm-publish` job that runs only on main branch
-   - Publishes development versions (e.g., `0.1.0-abc1234`)
+   - Added `helm-publish` job that runs on main and develop branches
+   - Publishes development versions:
+     - Main branch: `0.1.0-abc1234`
+     - Develop branch: `0.1.0-dev-abc1234`
    - Runs after successful build and test
 
 2. **`.github/workflows/release.yml`**
@@ -32,10 +34,17 @@ The Helm chart publishing has been integrated into the existing CI/CD workflows 
 ```mermaid
 graph TB
     subgraph "Push to Main"
-        A[Code Push] --> B[build.yml]
+        A[Code Push to main] --> B[build.yml]
         B --> C[Test & Lint]
         B --> D[Build Container]
         B --> E[Publish Helm Chart<br/>version: 0.1.0-abc1234]
+    end
+    
+    subgraph "Push to Develop"
+        A2[Code Push to develop] --> B2[build.yml]
+        B2 --> C2[Test & Lint]
+        B2 --> D2[Build Container]
+        B2 --> E2[Publish Helm Chart<br/>version: 0.1.0-dev-abc1234]
     end
     
     subgraph "Create Release"
@@ -81,12 +90,13 @@ git checkout main
 | Trigger | Container Tag | Helm Chart Version |
 |---------|--------------|-------------------|
 | Push to main | `latest` | `0.1.0-${SHA}` |
-| Push to develop | `latest-preview` | Not published |
+| Push to develop | `latest-preview` | `0.1.0-dev-${SHA}` |
 | Release v1.2.3 | `1.2.3` | `1.2.3` |
 
 ## Usage
 
 No changes for developers:
 - Push to main → Development chart published automatically
+- Push to develop → Development chart with `-dev-` prefix published automatically
 - Create release → Stable chart published automatically
 - Update values.yaml → Run `make docs` before committing 

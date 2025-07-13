@@ -79,7 +79,7 @@ jobs:
   helm-publish:
     name: Publish Helm Chart
     needs: [test, build]
-    if: github.ref == 'refs/heads/main'
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -108,9 +108,13 @@ jobs:
 
       - name: Update Chart Version
         run: |
-          # For main branch, append commit SHA to version
+          # Append commit SHA to version with branch prefix
           CURRENT_VERSION=$(grep '^version:' helm/kubernetes-event-exporter/Chart.yaml | awk '{print $2}')
-          NEW_VERSION="${CURRENT_VERSION}-${GITHUB_SHA::7}"
+          if [ "${{ github.ref }}" == "refs/heads/develop" ]; then
+            NEW_VERSION="${CURRENT_VERSION}-dev-${GITHUB_SHA::7}"
+          else
+            NEW_VERSION="${CURRENT_VERSION}-${GITHUB_SHA::7}"
+          fi
           sed -i "s/^version:.*/version: ${NEW_VERSION}/" helm/kubernetes-event-exporter/Chart.yaml
           sed -i "s/^appVersion:.*/appVersion: \"latest\"/" helm/kubernetes-event-exporter/Chart.yaml
 
@@ -176,5 +180,6 @@ jobs:
         run: |
           cd gh-pages
           git add .
-          git commit -m "Update Helm chart for commit ${GITHUB_SHA::7}" || echo "No changes to commit"
+          BRANCH_NAME=$(echo "${{ github.ref }}" | sed 's|refs/heads/||')
+          git commit -m "Update Helm chart from ${BRANCH_NAME} branch (${GITHUB_SHA::7})" || echo "No changes to commit"
           git push origin gh-pages --force
