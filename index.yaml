@@ -3,7 +3,7 @@ entries:
   kubernetes-event-exporter:
   - apiVersion: v2
     appVersion: latest
-    created: "2025-07-13T20:17:24.519590104Z"
+    created: "2025-07-13T21:41:32.487061287Z"
     description: A Helm chart for Kubernetes Event Exporter
     digest: 7af1d0eee4547d91cb38cabb5cf84c2361021c94a787235bc0bd60cc6dc395e8
     home: https://github.com/blaxel-ai/kubernetes-event-exporter
@@ -25,7 +25,7 @@ entries:
     version: 0.1.0-f61434f
   - apiVersion: v2
     appVersion: latest
-    created: "2025-07-13T20:17:24.518820587Z"
+    created: "2025-07-13T21:41:32.486310163Z"
     description: A Helm chart for Kubernetes Event Exporter
     digest: e2f92417893bbb901fd3f7b7249b4e73c6fbc3def80688a666bd3febb330dce6
     home: https://github.com/blaxel-ai/kubernetes-event-exporter
@@ -47,7 +47,29 @@ entries:
     version: 0.1.0-dev-c5647ca
   - apiVersion: v2
     appVersion: latest
-    created: "2025-07-13T20:17:24.518049977Z"
+    created: "2025-07-13T21:41:32.485526709Z"
+    description: A Helm chart for Kubernetes Event Exporter
+    digest: e8300eb6a4f26c28d9f5bfadb5048886e0fc7c1653df44f5b46c0935de82b2d5
+    home: https://github.com/blaxel-ai/kubernetes-event-exporter
+    keywords:
+    - kubernetes
+    - events
+    - monitoring
+    - eventbridge
+    - exporter
+    maintainers:
+    - email: support@blaxel.ai
+      name: Blaxel AI
+    name: kubernetes-event-exporter
+    sources:
+    - https://github.com/blaxel-ai/kubernetes-event-exporter
+    type: application
+    urls:
+    - https://blaxel-ai.github.io/kubernetes-event-exporter/kubernetes-event-exporter-0.1.0-dev-a48e447.tgz
+    version: 0.1.0-dev-a48e447
+  - apiVersion: v2
+    appVersion: latest
+    created: "2025-07-13T21:41:32.484707336Z"
     description: A Helm chart for Kubernetes Event Exporter
     digest: 0d3753f9b99bc385ab6598946dbafb3baf2d33a68c162c5f00775c4c23e5ac11
     home: https://github.com/blaxel-ai/kubernetes-event-exporter
@@ -67,4 +89,4 @@ entries:
     urls:
     - https://blaxel-ai.github.io/kubernetes-event-exporter/kubernetes-event-exporter-0.1.0-dev-82f7d42.tgz
     version: 0.1.0-dev-82f7d42
-generated: "2025-07-13T20:17:24.517093538Z"
+generated: "2025-07-13T21:41:32.483663181Z"
