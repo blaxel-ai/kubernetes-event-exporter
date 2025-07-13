@@ -1,0 +1,140 @@
+# Default values for kubernetes-event-exporter.
+
+replicaCount: 1
+
+image:
+  repository: ghcr.io/blaxel-ai/kubernetes-event-exporter
+  pullPolicy: IfNotPresent
+  tag: "latest-preview"
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  name: ""
+
+rbac:
+  # Create ClusterRole and ClusterRoleBinding
+  create: true
+
+# Deployment annotations
+annotations: {}
+
+# Pod annotations
+podAnnotations:
+  prometheus.io/scrape: 'true'
+  prometheus.io/port: '2112'
+  prometheus.io/path: '/metrics'
+
+podSecurityContext:
+  runAsNonRoot: true
+  seccompProfile:
+    type: RuntimeDefault
+
+securityContext:
+  allowPrivilegeEscalation: false
+  capabilities:
+    drop:
+    - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+
+resources:
+  requests:
+    memory: "128Mi"
+    cpu: "100m"
+  limits:
+    memory: "256Mi"
+    cpu: "500m"
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+# Configuration for the event exporter
+config:
+  logLevel: debug
+  logFormat: json
+  maxEventAgeSeconds: 60
+  kubeQPS: 100
+  kubeBurst: 500
+  metricsNamePrefix: event_exporter_
+
+# AWS Configuration for EventBridge
+aws:
+  # Enable AWS EventBridge integration
+  enabled: true
+  # AWS region where EventBridge is located
+  region: "eu-west-1"
+  
+  # Authentication options (in order of preference):
+  # 1. EKS Pod Identity - Leave credentials empty, no service account annotations needed
+  # 2. IRSA - Leave credentials empty, add eks.amazonaws.com/role-arn annotation to serviceAccount
+  # 3. Existing Secret - Set existingSecret
+  # 4. Static Credentials - Set credentials (NOT recommended)
+  
+  # Option 1 & 2: Pod Identity or IRSA (recommended for EKS)
+  # Leave these empty and configure IAM role associations
+  
+  # Option 3 & 4: Static credentials
+  credentials:
+    accessKeyId: ""
+    secretAccessKey: ""
+    sessionToken: ""
+  
+  # Reference an existing secret
+  existingSecret: ""
+  # Secret keys (only used if existingSecret is set)
+  secretKeys:
+    accessKeyId: "AWS_ACCESS_KEY_ID"
+    secretAccessKey: "AWS_SECRET_ACCESS_KEY"
+    sessionToken: "AWS_SESSION_TOKEN"
+
+# EventBridge configuration
+eventbridge:
+  enabled: true
+  eventBusName: "default"
+  detailType: "ExecutionPlane Event"
+  source: "executionPlane"
+
+# Cluster identification
+cluster:
+  name: "event-exporter-demo"
+
+# Route configuration
+routes:
+  - match:
+      - receiver: "eventbridge"
+  - match:
+      - receiver: "stdout"
+
+# Receiver configurations
+receivers:
+  eventbridge:
+    enabled: true
+  stdout:
+    enabled: true
+    deDot: true
+
+# Additional environment variables
+extraEnvVars: []
+# - name: MY_ENV_VAR
+#   value: "my-value"
+
+# Additional volume mounts
+extraVolumeMounts: []
+
+# Additional volumes
+extraVolumes: []
+
+# ConfigMap name (if you want to use an existing one)
+existingConfigMap: "" 

@@ -1,0 +1,73 @@
+# Example values for EventBridge configuration
+# Copy this file and update with your settings
+
+# Cluster identification
+cluster:
+  name: "production-cluster"
+
+# AWS Configuration
+aws:
+  enabled: true
+  region: "us-east-1"
+  
+  # Option 1: Reference an existing secret
+  # existingSecret: "aws-credentials"
+  # secretKeys:
+  #   accessKeyId: "AWS_ACCESS_KEY_ID"
+  #   secretAccessKey: "AWS_SECRET_ACCESS_KEY"
+  #   sessionToken: "AWS_SESSION_TOKEN"  # Optional for temporary credentials
+  
+  # Option 2: Provide credentials (they will be stored in a Kubernetes secret)
+  # WARNING: Do not commit this file with real credentials!
+  credentials:
+    accessKeyId: "AKIAIOSFODNN7EXAMPLE"
+    secretAccessKey: "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY"
+    # sessionToken: ""  # Optional for temporary credentials
+
+# EventBridge configuration
+eventbridge:
+  enabled: true
+  eventBusName: "default"  # or your custom event bus
+  detailType: "Kubernetes Event"
+  source: "kubernetes.cluster"
+
+# Event routing
+routes:
+  # Send all events to EventBridge
+  - match:
+      - receiver: "eventbridge"
+  
+  # Also log Warning and Error events to stdout
+  - match:
+      - receiver: "stdout"
+
+# Receiver configuration
+receivers:
+  eventbridge:
+    enabled: true
+  stdout:
+    enabled: true
+    deDot: true
+
+# Logging configuration
+config:
+  logLevel: info  # debug, info, warn, error
+  logFormat: json
+  maxEventAgeSeconds: 60
+  kubeQPS: 100
+  kubeBurst: 500
+
+# Resource limits
+resources:
+  requests:
+    memory: "128Mi"
+    cpu: "100m"
+  limits:
+    memory: "256Mi"
+    cpu: "500m"
+
+# Pod annotations for monitoring
+podAnnotations:
+  prometheus.io/scrape: 'true'
+  prometheus.io/port: '2112'
+  prometheus.io/path: '/metrics' 

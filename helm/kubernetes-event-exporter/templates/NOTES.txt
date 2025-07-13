@@ -1,0 +1,25 @@
+1. Get the application status by running these commands:
+  kubectl --namespace {{ .Release.Namespace }} get pods -l "app.kubernetes.io/name={{ include "kubernetes-event-exporter.name" . }},app.kubernetes.io/instance={{ .Release.Name }}"
+
+2. Check the logs:
+  kubectl --namespace {{ .Release.Namespace }} logs -l "app.kubernetes.io/name={{ include "kubernetes-event-exporter.name" . }},app.kubernetes.io/instance={{ .Release.Name }}"
+
+{{- if .Values.aws.enabled }}
+
+3. AWS EventBridge Configuration:
+   - Region: {{ .Values.aws.region }}
+   - Event Bus: {{ .Values.eventbridge.eventBusName }}
+   {{- if and (not .Values.aws.existingSecret) (not .Values.aws.credentials.accessKeyId) }}
+   
+   WARNING: No AWS credentials configured! The event exporter will not be able to send events to EventBridge.
+   Please either:
+   - Set aws.credentials in your values file
+   - Or reference an existing secret with aws.existingSecret
+   {{- end }}
+{{- end }}
+
+4. The event exporter is now watching for Kubernetes events and forwarding them according to your configuration.
+
+{{- if .Values.receivers.stdout.enabled }}
+5. Events are being logged to stdout. Check the pod logs to see them.
+{{- end }} 

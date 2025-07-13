@@ -1,0 +1,76 @@
+# Example values for EKS with Pod Identity
+# This is the recommended approach for running on Amazon EKS
+#
+# Prerequisites:
+# 1. Create an IAM role with EventBridge permissions
+# 2. Create an EKS Pod Identity association
+# 3. Install the chart with these values
+#
+# Example Pod Identity setup:
+# aws eks create-pod-identity-association \
+#   --cluster-name my-cluster \
+#   --namespace monitoring \
+#   --service-account event-exporter-kubernetes-event-exporter \
+#   --role-arn arn:aws:iam::123456789012:role/kubernetes-event-exporter
+
+cluster:
+  name: "my-eks-cluster"
+
+# AWS Configuration - No credentials needed!
+aws:
+  enabled: true
+  region: "us-east-1"
+  # Don't provide credentials - will use Pod Identity
+  credentials:
+    accessKeyId: ""
+    secretAccessKey: ""
+    sessionToken: ""
+  # Don't reference a secret
+  existingSecret: ""
+
+# Service Account configuration
+# No annotations needed for Pod Identity!
+serviceAccount:
+  create: true
+  annotations: {}
+  name: ""
+
+# EventBridge configuration
+eventbridge:
+  enabled: true
+  eventBusName: "default"
+  detailType: "Kubernetes Event"
+  source: "kubernetes.eks-cluster"
+
+# Event routing
+routes:
+  - match:
+      - receiver: "eventbridge"
+
+receivers:
+  eventbridge:
+    enabled: true
+  stdout:
+    enabled: false
+
+# Production-ready settings
+config:
+  logLevel: info
+  logFormat: json
+  maxEventAgeSeconds: 60
+  kubeQPS: 100
+  kubeBurst: 500
+
+resources:
+  requests:
+    memory: "128Mi"
+    cpu: "100m"
+  limits:
+    memory: "256Mi"
+    cpu: "500m"
+
+# Pod annotations
+podAnnotations:
+  prometheus.io/scrape: 'true'
+  prometheus.io/port: '2112'
+  prometheus.io/path: '/metrics' 
