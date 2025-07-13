@@ -151,8 +151,18 @@ jobs:
           cp .build/*.tgz gh-pages/
           cd gh-pages
           
-          # Generate index.yaml
-          helm repo index . --url https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}
+          # Clean up old development versions (keep last 5 per branch)
+          # List all dev versions, sort by date, and remove old ones
+          for pattern in "*-dev-*.tgz" "*-[0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f].tgz"; do
+            ls -1t $pattern 2>/dev/null | tail -n +6 | xargs -r rm -f
+          done
+          
+          # Generate index.yaml (merge with existing if present)
+          if [ -f index.yaml ]; then
+            helm repo index . --merge index.yaml --url https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}
+          else
+            helm repo index . --url https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}
+          fi
           
           # Create README if it doesn't exist
           if [ ! -f README.md ]; then

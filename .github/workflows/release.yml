@@ -85,6 +85,10 @@ jobs:
           # Update Chart.yaml with the release version
           sed -i "s/^version:.*/version: ${GITHUB_REF_NAME#v}/" helm/kubernetes-event-exporter/Chart.yaml
           sed -i "s/^appVersion:.*/appVersion: \"${GITHUB_REF_NAME#v}\"/" helm/kubernetes-event-exporter/Chart.yaml
+          
+          # Verify the changes
+          echo "Updated Chart.yaml:"
+          grep -E "^(version|appVersion):" helm/kubernetes-event-exporter/Chart.yaml
 
       - name: Generate Values Documentation
         run: |
@@ -96,34 +100,58 @@ jobs:
         run: |
           mkdir -p .build
           helm package helm/kubernetes-event-exporter -d .build
+          
+          # Verify the packaged chart
+          echo "Packaged chart contents:"
+          tar -tzf .build/*.tgz | grep Chart.yaml
+          tar -xzf .build/*.tgz -O kubernetes-event-exporter/Chart.yaml | grep -E "^(version|appVersion):"
 
-      - name: Checkout gh-pages branch
-        uses: actions/checkout@v4
-        with:
-          ref: gh-pages
-          path: gh-pages
-
-      - name: Create gh-pages branch if it doesn't exist
+      - name: Prepare gh-pages directory
         run: |
-          if [ ! -d "gh-pages/.git" ]; then
+          # Clone the repository with just the gh-pages branch if it exists
+          git clone --single-branch --branch gh-pages https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git gh-pages 2>/dev/null || {
+            echo "gh-pages branch does not exist, creating it..."
             mkdir -p gh-pages
             cd gh-pages
             git init
+            git config user.name "${{ github.actor }}"
+            git config user.email "${{ github.actor }}@users.noreply.github.com"
             git checkout -b gh-pages
+            echo "# Helm Repository" > README.md
+            git add README.md
+            git commit -m "Initial gh-pages branch"
             cd ..
-          fi
+          }
 
       - name: Copy and Index Charts
         run: |
           cp .build/*.tgz gh-pages/
           cd gh-pages
           
-          # Generate index.yaml
-          helm repo index . --url https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}
+          # Generate index.yaml (merge with existing if present)
+          if [ -f index.yaml ]; then
+            helm repo index . --merge index.yaml --url https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}
+          else
+            helm repo index . --url https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}
+          fi
+          
+          # Verify the index contains correct appVersion
+          echo "Index.yaml entry for release:"
+          grep -A 20 "version: ${GITHUB_REF_NAME#v}" index.yaml || true
 
       - name: Commit and Push to gh-pages
         run: |
           cd gh-pages
+          
+          # Configure git identity
+          git config user.name "${{ github.actor }}"
+          git config user.email "${{ github.actor }}@users.noreply.github.com"
+          
           git add .
           git commit -m "Release Helm chart version ${GITHUB_REF_NAME#v}" || echo "No changes to commit"
+          
+          # Set remote if not already set (for newly created branch)
+          git remote -v | grep origin || git remote add origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
+          
+          # Push to gh-pages branch
           git push origin gh-pages --force
