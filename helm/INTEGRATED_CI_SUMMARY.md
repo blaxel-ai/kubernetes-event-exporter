@@ -70,20 +70,18 @@ graph TB
 
 ## Initial Setup
 
-Since we removed the setup workflow, initial GitHub Pages setup is manual:
+The gh-pages branch is automatically created on the first workflow run. You only need to:
 
-```bash
-# One-time setup for gh-pages branch
-git checkout --orphan gh-pages
-git rm -rf .
-echo "Helm repository" > README.md
-git add README.md
-git commit -m "Initial gh-pages"
-git push origin gh-pages
-git checkout main
+1. **Enable GitHub Pages** (after the first workflow run):
+   - Go to Settings → Pages
+   - Source: Deploy from a branch
+   - Branch: `gh-pages` / `/ (root)`
+   - Click Save
 
-# Then enable GitHub Pages in repository settings
-```
+The workflow will automatically:
+- Create the gh-pages branch if it doesn't exist
+- Initialize it with a README
+- Set up the Helm repository structure
 
 ## Version Strategy
 

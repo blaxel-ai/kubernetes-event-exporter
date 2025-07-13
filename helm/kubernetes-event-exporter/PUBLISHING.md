@@ -29,18 +29,13 @@ https://<owner>.github.io/<repo-name>
 
 ## Initial Setup (One-time)
 
-1. **Create the gh-pages branch**:
-   ```bash
-   git checkout --orphan gh-pages
-   git rm -rf .
-   echo "Helm repository" > README.md
-   git add README.md
-   git commit -m "Initial gh-pages"
-   git push origin gh-pages
-   git checkout main
-   ```
+The gh-pages branch is automatically created on the first workflow run. You only need to:
 
-2. **Enable GitHub Pages**:
+1. **Push to main or develop branch**:
+   - The workflow will automatically create the gh-pages branch
+   - It will initialize the Helm repository structure
+
+2. **Enable GitHub Pages** (after the first workflow run):
    - Go to Settings → Pages
    - Source: Deploy from a branch
    - Branch: `gh-pages` / `/ (root)`
@@ -48,7 +43,7 @@ https://<owner>.github.io/<repo-name>
 
 3. **Wait for deployment**:
    - GitHub Pages takes a few minutes to activate
-   - The next push to main will initialize the Helm repository
+   - Check the Actions tab to see the workflow progress
 
 ## Publishing a New Version
 

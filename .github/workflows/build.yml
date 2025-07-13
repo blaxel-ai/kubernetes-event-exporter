@@ -129,21 +129,22 @@ jobs:
           mkdir -p .build
           helm package helm/kubernetes-event-exporter -d .build
 
-      - name: Checkout gh-pages branch
-        uses: actions/checkout@v4
-        with:
-          ref: gh-pages
-          path: gh-pages
-
-      - name: Create gh-pages branch if it doesn't exist
+      - name: Prepare gh-pages directory
         run: |
-          if [ ! -d "gh-pages/.git" ]; then
+          # Clone the repository with just the gh-pages branch if it exists
+          git clone --single-branch --branch gh-pages https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git gh-pages 2>/dev/null || {
+            echo "gh-pages branch does not exist, creating it..."
             mkdir -p gh-pages
             cd gh-pages
             git init
+            git config user.name "${{ github.actor }}"
+            git config user.email "${{ github.actor }}@users.noreply.github.com"
             git checkout -b gh-pages
+            echo "# Helm Repository" > README.md
+            git add README.md
+            git commit -m "Initial gh-pages branch"
             cd ..
-          fi
+          }
 
       - name: Copy and Index Charts
         run: |
@@ -182,4 +183,9 @@ jobs:
           git add .
           BRANCH_NAME=$(echo "${{ github.ref }}" | sed 's|refs/heads/||')
           git commit -m "Update Helm chart from ${BRANCH_NAME} branch (${GITHUB_SHA::7})" || echo "No changes to commit"
+          
+          # Set remote if not already set (for newly created branch)
+          git remote -v | grep origin || git remote add origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
+          
+          # Push to gh-pages branch
           git push origin gh-pages --force
