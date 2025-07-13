@@ -1,0 +1,64 @@
+# Example values for EKS with IAM Roles for Service Accounts (IRSA)
+# Note: Pod Identity is recommended for new deployments
+#
+# Prerequisites:
+# 1. Create an IAM role with EventBridge permissions
+# 2. Configure the role trust policy for IRSA
+# 3. Install the chart with these values
+
+cluster:
+  name: "my-eks-cluster"
+
+# AWS Configuration - No credentials needed!
+aws:
+  enabled: true
+  region: "us-east-1"
+  # Don't provide credentials - will use IRSA
+  credentials:
+    accessKeyId: ""
+    secretAccessKey: ""
+    sessionToken: ""
+  # Don't reference a secret
+  existingSecret: ""
+
+# Service Account configuration for IRSA
+serviceAccount:
+  create: true
+  annotations:
+    # Replace with your IAM role ARN
+    eks.amazonaws.com/role-arn: "arn:aws:iam::123456789012:role/kubernetes-event-exporter"
+  name: ""
+
+# EventBridge configuration
+eventbridge:
+  enabled: true
+  eventBusName: "default"
+  detailType: "Kubernetes Event"
+  source: "kubernetes.eks-cluster"
+
+# Event routing
+routes:
+  - match:
+      - receiver: "eventbridge"
+
+receivers:
+  eventbridge:
+    enabled: true
+  stdout:
+    enabled: false
+
+# Production-ready settings
+config:
+  logLevel: info
+  logFormat: json
+  maxEventAgeSeconds: 60
+  kubeQPS: 100
+  kubeBurst: 500
+
+resources:
+  requests:
+    memory: "128Mi"
+    cpu: "100m"
+  limits:
+    memory: "256Mi"
+    cpu: "500m" 

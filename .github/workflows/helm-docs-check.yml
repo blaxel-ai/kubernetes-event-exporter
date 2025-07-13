@@ -1,0 +1,45 @@
+name: Check Helm Documentation
+
+on:
+  pull_request:
+    paths:
+      - 'helm/**/values.yaml'
+      - 'helm/**/README.md'
+      - 'helm/**/scripts/generate-values-docs.*'
+
+jobs:
+  check-docs:
+    name: Verify Helm Documentation
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+
+      - name: Install dependencies
+        run: |
+          pip install pyyaml
+
+      - name: Generate documentation
+        run: |
+          cd helm/kubernetes-event-exporter
+          cp README.md README.md.orig
+          python3 scripts/generate-values-docs.py
+
+      - name: Check for differences
+        run: |
+          cd helm/kubernetes-event-exporter
+          if ! diff -q README.md README.md.orig > /dev/null; then
+            echo "ERROR: Helm values documentation is out of date!"
+            echo "Please run 'make docs' in the helm/kubernetes-event-exporter directory and commit the changes."
+            echo ""
+            echo "Differences found:"
+            diff -u README.md.orig README.md || true
+            exit 1
+          else
+            echo "✅ Helm values documentation is up to date!"
+          fi 

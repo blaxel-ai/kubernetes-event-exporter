@@ -4,6 +4,12 @@ on:
   push:
     branches: [main, develop]
 
+permissions:
+  contents: write
+  packages: write
+  pages: write
+  id-token: write
+
 jobs:
   test:
     name: Test and Lint
@@ -69,3 +75,117 @@ jobs:
           tags: ${{ steps.set-tags.outputs.GHCR_TAG }}
           build-args: |
             VERSION=${{ github.sha }}
+
+  helm-publish:
+    name: Publish Helm Chart
+    needs: [test, build]
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Configure Git
+        run: |
+          git config user.name "$GITHUB_ACTOR"
+          git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
+
+      - name: Install Helm
+        uses: azure/setup-helm@v3
+        with:
+          version: v3.13.0
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+      
+      - name: Install Python dependencies
+        run: |
+          pip install pyyaml
+
+      - name: Update Chart Version
+        run: |
+          # Append commit SHA to version with branch prefix
+          CURRENT_VERSION=$(grep '^version:' helm/kubernetes-event-exporter/Chart.yaml | awk '{print $2}')
+          if [ "${{ github.ref }}" == "refs/heads/develop" ]; then
+            NEW_VERSION="${CURRENT_VERSION}-dev-${GITHUB_SHA::7}"
+          else
+            NEW_VERSION="${CURRENT_VERSION}-${GITHUB_SHA::7}"
+          fi
+          sed -i "s/^version:.*/version: ${NEW_VERSION}/" helm/kubernetes-event-exporter/Chart.yaml
+          sed -i "s/^appVersion:.*/appVersion: \"latest\"/" helm/kubernetes-event-exporter/Chart.yaml
+
+      - name: Generate Values Documentation
+        run: |
+          cd helm/kubernetes-event-exporter
+          make docs
+          cd ../..
+
+      - name: Package Helm Chart
+        run: |
+          mkdir -p .build
+          helm package helm/kubernetes-event-exporter -d .build
+
+      - name: Prepare gh-pages directory
+        run: |
+          # Clone the repository with just the gh-pages branch if it exists
+          git clone --single-branch --branch gh-pages https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git gh-pages 2>/dev/null || {
+            echo "gh-pages branch does not exist, creating it..."
+            mkdir -p gh-pages
+            cd gh-pages
+            git init
+            git config user.name "${{ github.actor }}"
+            git config user.email "${{ github.actor }}@users.noreply.github.com"
+            git checkout -b gh-pages
+            echo "# Helm Repository" > README.md
+            git add README.md
+            git commit -m "Initial gh-pages branch"
+            cd ..
+          }
+
+      - name: Copy and Index Charts
+        run: |
+          cp .build/*.tgz gh-pages/
+          cd gh-pages
+          
+          # Generate index.yaml
+          helm repo index . --url https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}
+          
+          # Create README if it doesn't exist
+          if [ ! -f README.md ]; then
+            cat > README.md <<EOF
+          # Kubernetes Event Exporter Helm Repository
+
+          This is the Helm chart repository for Kubernetes Event Exporter.
+
+          ## Usage
+
+          \`\`\`bash
+          helm repo add kubernetes-event-exporter https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}
+          helm repo update
+          helm install event-exporter kubernetes-event-exporter/kubernetes-event-exporter
+          \`\`\`
+
+          ## Available Charts
+
+          - **kubernetes-event-exporter**: Main Helm chart for deploying the event exporter
+
+          For more information, visit the [main repository](https://github.com/${{ github.repository }}).
+          EOF
+          fi
+
+      - name: Commit and Push to gh-pages
+        run: |
+          cd gh-pages
+          git add .
+          BRANCH_NAME=$(echo "${{ github.ref }}" | sed 's|refs/heads/||')
+          git commit -m "Update Helm chart from ${BRANCH_NAME} branch (${GITHUB_SHA::7})" || echo "No changes to commit"
+          
+          # Set remote if not already set (for newly created branch)
+          git remote -v | grep origin || git remote add origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
+          
+          # Push to gh-pages branch
+          git push origin gh-pages --force
