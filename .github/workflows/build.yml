@@ -180,6 +180,11 @@ jobs:
       - name: Commit and Push to gh-pages
         run: |
           cd gh-pages
+          
+          # Configure git identity
+          git config user.name "${{ github.actor }}"
+          git config user.email "${{ github.actor }}@users.noreply.github.com"
+          
           git add .
           BRANCH_NAME=$(echo "${{ github.ref }}" | sed 's|refs/heads/||')
           git commit -m "Update Helm chart from ${BRANCH_NAME} branch (${GITHUB_SHA::7})" || echo "No changes to commit"
