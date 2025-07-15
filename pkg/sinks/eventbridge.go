@@ -15,7 +15,7 @@ import (
 
 type EventBridgeConfig struct {
 	DetailType   string                 `yaml:"detailType"`
-	Details      map[string]interface{} `yaml:"details"`
+	Detail       map[string]interface{} `yaml:"detail"`
 	Source       string                 `yaml:"source"`
 	EventBusName string                 `yaml:"eventBusName"`
 	Region       string                 `yaml:"region"`
@@ -52,8 +52,8 @@ func NewEventBridgeSink(cfg *EventBridgeConfig) (Sink, error) {
 func (s *EventBridgeSink) Send(ctx context.Context, ev *kube.EnhancedEvent) error {
 	log.Info().Msg("Sending event to EventBridge ")
 	var toSend string
-	if s.cfg.Details != nil {
-		res, err := convertLayoutTemplate(s.cfg.Details, ev)
+	if s.cfg.Detail != nil {
+		res, err := convertLayoutTemplate(s.cfg.Detail, ev)
 		if err != nil {
 			return err
 		}

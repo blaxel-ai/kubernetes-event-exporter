@@ -35,7 +35,7 @@ data:
       {{- if .Values.receivers.eventbridge.enabled }}
       - name: "eventbridge"
         eventbridge:
-          region: "${AWS_REGION}"
+          region: {{ .Values.aws.region | quote }}
           eventBusName: {{ .Values.eventbridge.eventBusName | quote }}
           detailType: {{ .Values.eventbridge.detailType | quote }}
           source: {{ .Values.eventbridge.source | quote }}
@@ -48,7 +48,7 @@ data:
             datacontenttype: "application/json"
             subject: "{{ "{{ .InvolvedObject.Kind }}" }}/{{ "{{ .InvolvedObject.Namespace }}" }}/{{ "{{ .InvolvedObject.Name }}" }}"
             cluster: "{{ "{{ .ClusterName | default \\\"${CLUSTER_NAME}\\\" | default \\\"unknown\\\" }}" }}"
-            region: "${AWS_REGION}"
+            region: {{ .Values.aws.region | quote }}
             data:
               message: "{{ "{{ .Message }}" }}"
               reason: "{{ "{{ .Reason }}" }}"

@@ -24,7 +24,7 @@ func TestLayoutConvert(t *testing.T) {
 	tagz.([]interface{})[1] = "ops"
 
 	layout := map[string]interface{}{
-		"details": map[interface{}]interface{}{
+		"detail": map[interface{}]interface{}{
 			"message":   "{{ .Message }}",
 			"kind":      "{{ .InvolvedObject.Kind }}",
 			"name":      "{{ .InvolvedObject.Name }}",
@@ -41,7 +41,7 @@ func TestLayoutConvert(t *testing.T) {
 	require.NoError(t, err)
 	require.Equal(t, res["eventType"], "kube-event")
 
-	val, ok := res["details"].(map[string]interface{})
+	val, ok := res["detail"].(map[string]interface{})
 
 	require.True(t, ok, "cannot cast to event")
 

@@ -502,7 +502,7 @@ receivers:
      source: "cd"
      eventBusName: "default"
      region: "ap-southeast-1"
-     details:
+     detail:
        message: "{{ .Message }}"
        namespace: "{{ .Namespace }}"
        reason: "{{ .Reason }}"
