@@ -2,8 +2,30 @@ apiVersion: v1
 entries:
   kubernetes-event-exporter:
   - apiVersion: v2
+    appVersion: 1.0.4
+    created: "2025-07-15T03:00:48.247701825Z"
+    description: A Helm chart for Kubernetes Event Exporter
+    digest: f4f11d4ac728ca1d0ff496a524cff57efd337810ce179f3491e8bebfb2efdc99
+    home: https://github.com/blaxel-ai/kubernetes-event-exporter
+    keywords:
+    - kubernetes
+    - events
+    - monitoring
+    - eventbridge
+    - exporter
+    maintainers:
+    - email: support@blaxel.ai
+      name: Blaxel AI
+    name: kubernetes-event-exporter
+    sources:
+    - https://github.com/blaxel-ai/kubernetes-event-exporter
+    type: application
+    urls:
+    - https://blaxel-ai.github.io/kubernetes-event-exporter/kubernetes-event-exporter-1.0.4.tgz
+    version: 1.0.4
+  - apiVersion: v2
     appVersion: 1.0.3
-    created: "2025-07-15T02:48:37.079093371Z"
+    created: "2025-07-15T03:00:48.246820265Z"
     description: A Helm chart for Kubernetes Event Exporter
     digest: 2c8d453c9247ca943ac7e0cd26a5d5748d03941b4f85dec8ea0fe3ae8c93cbb1
     home: https://github.com/blaxel-ai/kubernetes-event-exporter
@@ -25,7 +47,7 @@ entries:
     version: 1.0.3
   - apiVersion: v2
     appVersion: 1.0.2
-    created: "2025-07-15T02:48:37.07832812Z"
+    created: "2025-07-15T03:00:48.245398228Z"
     description: A Helm chart for Kubernetes Event Exporter
     digest: 4752ff19c2e3a54e9f735027c358b7dc5917ee54f267686817a981dd84cd335f
     home: https://github.com/blaxel-ai/kubernetes-event-exporter
@@ -47,7 +69,7 @@ entries:
     version: 1.0.2
   - apiVersion: v2
     appVersion: 1.0.1
-    created: "2025-07-15T02:48:37.077586254Z"
+    created: "2025-07-15T03:00:48.244657133Z"
     description: A Helm chart for Kubernetes Event Exporter
     digest: e8d893befe1a3ff6f8439829218920855334e2e1823b2baa1d094d379c521342
     home: https://github.com/blaxel-ai/kubernetes-event-exporter
@@ -201,7 +223,7 @@ entries:
     version: 0.1.0-dev-82f7d42
   - apiVersion: v2
     appVersion: latest
-    created: "2025-07-15T02:48:37.07680841Z"
+    created: "2025-07-15T03:00:48.243883226Z"
     description: A Helm chart for Kubernetes Event Exporter
     digest: bf3c58d0a915b3c95fde5e4c2a8a0a5d51418499eca3326eb9a2279ca36b04f5
     home: https://github.com/blaxel-ai/kubernetes-event-exporter
@@ -223,7 +245,7 @@ entries:
     version: 0.1.0-dev-5ff0257
   - apiVersion: v2
     appVersion: latest
-    created: "2025-07-15T02:48:37.076035736Z"
+    created: "2025-07-15T03:00:48.243134235Z"
     description: A Helm chart for Kubernetes Event Exporter
     digest: a666163aaad9ed5e303b294a8a089a95c3fe400a5120ff91fc278605093423c0
     home: https://github.com/blaxel-ai/kubernetes-event-exporter
@@ -245,7 +267,7 @@ entries:
     version: 0.1.0-dev-3e9b214
   - apiVersion: v2
     appVersion: latest
-    created: "2025-07-15T02:48:37.075236912Z"
+    created: "2025-07-15T03:00:48.242389863Z"
     description: A Helm chart for Kubernetes Event Exporter
     digest: 7a1715802c2998ed9f583b566c80755bc034baebd9cf82e478394418c5b44afc
     home: https://github.com/blaxel-ai/kubernetes-event-exporter
@@ -267,7 +289,7 @@ entries:
     version: 0.1.0-ce17579
   - apiVersion: v2
     appVersion: latest
-    created: "2025-07-15T02:48:37.074334634Z"
+    created: "2025-07-15T03:00:48.24164976Z"
     description: A Helm chart for Kubernetes Event Exporter
     digest: 650bc07b3ecb87742754a356cd6599620c55cb3eea83cfbfc62c20cc653a9e74
     home: https://github.com/blaxel-ai/kubernetes-event-exporter
@@ -289,7 +311,7 @@ entries:
     version: 0.1.0-64951fd
   - apiVersion: v2
     appVersion: latest
-    created: "2025-07-15T02:48:37.072411991Z"
+    created: "2025-07-15T03:00:48.240867107Z"
     description: A Helm chart for Kubernetes Event Exporter
     digest: 38f865f1c504a3a161065332982726995aa650efcef86f7f07f4b157c2b46a8e
     home: https://github.com/blaxel-ai/kubernetes-event-exporter
@@ -309,4 +331,4 @@ entries:
     urls:
     - https://blaxel-ai.github.io/kubernetes-event-exporter/kubernetes-event-exporter-0.1.0-33dc2c1.tgz
     version: 0.1.0-33dc2c1
-generated: "2025-07-15T02:48:37.071215278Z"
+generated: "2025-07-15T03:00:48.239884617Z"
