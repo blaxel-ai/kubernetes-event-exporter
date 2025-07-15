@@ -140,9 +140,9 @@ existingConfigMap: "my-event-exporter-config"
 | `aws.credentials.accessKeyId` | See values.yaml | `""` |
 | `aws.credentials.secretAccessKey` | See values.yaml | `""` |
 | `aws.credentials.sessionToken` | See values.yaml | `""` |
-| `aws.enabled` | See values.yaml | `true` |
+| `aws.enabled` | Enable AWS EventBridge integration | `true` |
 | `aws.existingSecret` | Reference an existing secret | `""` |
-| `aws.region` | See values.yaml | `"eu-west-1"` |
+| `aws.region` | AWS region where EventBridge is located | `"eu-west-1"` |
 | `aws.secretKeys.accessKeyId` | See values.yaml | `"AWS_ACCESS_KEY_ID"` |
 | `aws.secretKeys.secretAccessKey` | See values.yaml | `"AWS_SECRET_ACCESS_KEY"` |
 | `aws.secretKeys.sessionToken` | See values.yaml | `"AWS_SESSION_TOKEN"` |
@@ -153,8 +153,8 @@ existingConfigMap: "my-event-exporter-config"
 | `config.logLevel` | See values.yaml | `"debug"` |
 | `config.maxEventAgeSeconds` | See values.yaml | `60` |
 | `config.metricsNamePrefix` | See values.yaml | `"event_exporter_"` |
-| `eventbridge.detailType` | See values.yaml | `"ExecutionPlane Event"` |
-| `eventbridge.enabled` | See values.yaml | `true` |
+| `eventbridge.detailType` | See values.yaml | `"CloudEvent"` |
+| `eventbridge.enabled` | Enable AWS EventBridge integration | `true` |
 | `eventbridge.eventBusName` | See values.yaml | `"default"` |
 | `eventbridge.source` | See values.yaml | `"executionPlane"` |
 | `existingConfigMap` | ConfigMap name (if you want to use an existing one) | `""` |
@@ -164,7 +164,7 @@ existingConfigMap: "my-event-exporter-config"
 | `fullnameOverride` | See values.yaml | `""` |
 | `image.pullPolicy` | See values.yaml | `"IfNotPresent"` |
 | `image.repository` | See values.yaml | `"ghcr.io/blaxel-ai/kubernetes-event-exporter"` |
-| `image.tag` | See values.yaml | `"latest-preview"` |
+| `image.tag` | See values.yaml | `"latest"` |
 | `imagePullSecrets` | See values.yaml | `[]` |
 | `nameOverride` | See values.yaml | `""` |
 | `nodeSelector` | See values.yaml | `{}` |
@@ -174,9 +174,9 @@ existingConfigMap: "my-event-exporter-config"
 | `podSecurityContext.runAsNonRoot` | See values.yaml | `true` |
 | `podSecurityContext.seccompProfile.type` | See values.yaml | `"RuntimeDefault"` |
 | `rbac.create` | Create ClusterRole and ClusterRoleBinding | `true` |
-| `receivers.eventbridge.enabled` | See values.yaml | `true` |
+| `receivers.eventbridge.enabled` | Enable AWS EventBridge integration | `true` |
 | `receivers.stdout.deDot` | See values.yaml | `true` |
-| `receivers.stdout.enabled` | See values.yaml | `true` |
+| `receivers.stdout.enabled` | Enable AWS EventBridge integration | `true` |
 | `replicaCount` | Default values for kubernetes-event-exporter. | `1` |
 | `routes` | Route configuration | See values.yaml |
 | `securityContext.allowPrivilegeEscalation` | See values.yaml | `false` |

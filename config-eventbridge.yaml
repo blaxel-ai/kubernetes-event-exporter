@@ -27,7 +27,7 @@ receivers:
       source: "kubernetes.local"
       eventBusName: "default"
       region: "us-east-1"  # Change this to your AWS region
-      details:
+      detail:
         message: "{{ .Message }}"
         namespace: "{{ .Namespace }}"
         reason: "{{ .Reason }}"
@@ -47,7 +47,7 @@ receivers:
       source: "kubernetes.local"
       eventBusName: "default"
       region: "us-east-1"  # Change this to your AWS region
-      details:
+      detail:
         message: "{{ .Message }}"
         namespace: "{{ .Namespace }}"
         reason: "{{ .Reason }}"

@@ -5,7 +5,7 @@ replicaCount: 1
 image:
   repository: ghcr.io/blaxel-ai/kubernetes-event-exporter
   pullPolicy: IfNotPresent
-  tag: "latest-preview"
+  tag: "latest"
 
 imagePullSecrets: []
 nameOverride: ""
