@@ -39,9 +39,9 @@ data:
           eventBusName: {{ .Values.eventbridge.eventBusName | quote }}
           detailType: {{ .Values.eventbridge.detailType | quote }}
           source: {{ .Values.eventbridge.source | quote }}
-          details:
+          detail:
             specversion: "1.0"
-            type: "ai.blaxel.executionplane.kubernetes.event.{{ "{{ .Type | lower }}" }}"
+            type: "ai.blaxel.executionplane.kubernetes.{{ "{{ .Type | lower }}" }}"
             source: "/executionplane/{{ "{{ .ClusterName | default \\\"${CLUSTER_NAME}\\\" | default \\\"unknown\\\" }}" }}/{{ "{{ .Namespace }}" }}"
             id: "{{ "{{ .UID }}" }}"
             time: "{{ "{{ .LastTimestamp }}" }}"

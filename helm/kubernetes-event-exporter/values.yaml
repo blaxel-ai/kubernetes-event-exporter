@@ -103,7 +103,7 @@ aws:
 eventbridge:
   enabled: true
   eventBusName: "default"
-  detailType: "ExecutionPlane Event"
+  detailType: "CloudEvent"
   source: "executionPlane"
 
 # Cluster identification
