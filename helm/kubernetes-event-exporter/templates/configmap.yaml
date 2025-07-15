@@ -42,19 +42,19 @@ data:
           details:
             specversion: "1.0"
             type: "ai.blaxel.executionplane.kubernetes.event.{{ "{{ .Type | lower }}" }}"
-            source: "/executionplane/{{ "{{ .ClusterName | default \"${CLUSTER_NAME}\" | default \"unknown\" }}" }}/{{ "{{ .Namespace }}" }}"
+            source: "/executionplane/{{ "{{ .ClusterName | default \\\"${CLUSTER_NAME}\\\" | default \\\"unknown\\\" }}" }}/{{ "{{ .Namespace }}" }}"
             id: "{{ "{{ .UID }}" }}"
             time: "{{ "{{ .LastTimestamp }}" }}"
             datacontenttype: "application/json"
             subject: "{{ "{{ .InvolvedObject.Kind }}" }}/{{ "{{ .InvolvedObject.Namespace }}" }}/{{ "{{ .InvolvedObject.Name }}" }}"
-            cluster: "{{ "{{ .ClusterName | default \"${CLUSTER_NAME}\" | default \"unknown\" }}" }}"
+            cluster: "{{ "{{ .ClusterName | default \\\"${CLUSTER_NAME}\\\" | default \\\"unknown\\\" }}" }}"
             region: "${AWS_REGION}"
             data:
               message: "{{ "{{ .Message }}" }}"
               reason: "{{ "{{ .Reason }}" }}"
               type: "{{ "{{ .Type }}" }}"
               namespace: "{{ "{{ .Namespace }}" }}"
-              cluster: "{{ "{{ .ClusterName | default \"${CLUSTER_NAME}\" | default \"unknown\" }}" }}"
+              cluster: "{{ "{{ .ClusterName | default \\\"${CLUSTER_NAME}\\\" | default \\\"unknown\\\" }}" }}"
               involvedObject:
                 kind: "{{ "{{ .InvolvedObject.Kind }}" }}"
                 name: "{{ "{{ .InvolvedObject.Name }}" }}"
