@@ -147,6 +147,8 @@ existingConfigMap: "my-event-exporter-config"
 | `aws.secretKeys.secretAccessKey` | See values.yaml | `"AWS_SECRET_ACCESS_KEY"` |
 | `aws.secretKeys.sessionToken` | See values.yaml | `"AWS_SESSION_TOKEN"` |
 | `cluster.name` | The name of the service account to use. | `"event-exporter-demo"` |
+| `config.excludeComponents` | Server-side filtering: events matching these components are never sent by the kube-apiserver to the watcher. Maps to a `source!=X` field selector for each entry. Useful to silence noisy controllers. Example: ["persistentvolume-controller", "attachdetach-controller"]  NOTE: when this list is empty AND `fieldSelector` below is empty, the binary applies a built-in default of `source!=persistentvolume-controller` (see DefaultFieldSelector in pkg/exporter/config.go). To opt out entirely, set `fieldSelector` to any non-empty value (e.g. "metadata.namespace!=__none__"). | `[]` |
+| `config.fieldSelector` | Raw field selector escape hatch. If set, takes precedence over excludeComponents AND disables the binary's built-in default. See: https://kubernetes.io/docs/concepts/overview/working-with-objects/field-selectors/ Selectable fields on core/v1 Events include: involvedObject.kind, involvedObject.namespace, involvedObject.name, reason, source, type. | `""` |
 | `config.kubeBurst` | See values.yaml | `500` |
 | `config.kubeQPS` | See values.yaml | `100` |
 | `config.logFormat` | See values.yaml | `"json"` |
@@ -178,7 +180,7 @@ existingConfigMap: "my-event-exporter-config"
 | `receivers.stdout.deDot` | See values.yaml | `true` |
 | `receivers.stdout.enabled` | Enable AWS EventBridge integration | `true` |
 | `replicaCount` | Default values for kubernetes-event-exporter. | `1` |
-| `routes` | Route configuration | See values.yaml |
+| `routes` | Route configuration.  Each entry under `routes` becomes a sub-route. Every key inside `match` or `drop` is passed through verbatim to the exporter, so you can use any field supported by Rule (reason, kind, namespace, type, component, labels, etc.). All values are evaluated as regex.  Default allowlist below matches the set of event reasons consumed by the controlplane job analyzer. Anything not matching is dropped by the route. Edit `reason` (or remove it) to receive more/different events. | See values.yaml |
 | `securityContext.allowPrivilegeEscalation` | See values.yaml | `false` |
 | `securityContext.capabilities.drop` | See values.yaml | See values.yaml |
 | `serviceAccount.annotations` | Annotations to add to the service account | `{}` |
