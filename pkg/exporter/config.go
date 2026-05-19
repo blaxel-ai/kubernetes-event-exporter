@@ -14,6 +14,12 @@ import (
 
 const (
 	DefaultCacheSize = 1024
+	// DefaultFieldSelector is applied when Config.FieldSelector is empty.
+	// persistentvolume-controller is almost always the noisiest source on
+	// real clusters and is filtered out by default. Users that genuinely
+	// want those events can override by setting FieldSelector explicitly
+	// (any non-empty value disables this default).
+	DefaultFieldSelector = "source!=persistentvolume-controller"
 )
 
 // Config allows configuration
@@ -35,12 +41,23 @@ type Config struct {
 	MetricsNamePrefix  string                    `yaml:"metricsNamePrefix,omitempty"`
 	OmitLookup         bool                      `yaml:"omitLookup,omitempty"`
 	CacheSize          int                       `yaml:"cacheSize,omitempty"`
+	// FieldSelector is passed verbatim to the Events informer ListOptions, so the
+	// apiserver filters events server-side and the exporter never receives them.
+	// Example: "source!=persistentvolume-controller,source!=attachdetach-controller".
+	// See https://kubernetes.io/docs/concepts/overview/working-with-objects/field-selectors/
+	// When empty, defaults to DefaultFieldSelector. Set any non-empty value to opt out.
+	FieldSelector string `yaml:"fieldSelector,omitempty"`
 }
 
 func (c *Config) SetDefaults() {
 	if c.CacheSize == 0 {
 		c.CacheSize = DefaultCacheSize
 		log.Debug().Msg("setting config.cacheSize=1024 (default)")
+	}
+
+	if c.FieldSelector == "" {
+		c.FieldSelector = DefaultFieldSelector
+		log.Info().Str("fieldSelector", c.FieldSelector).Msg("setting config.fieldSelector (default)")
 	}
 
 	if c.KubeBurst == 0 {

@@ -21,14 +21,34 @@ data:
     {{- if .Values.config.metricsNamePrefix }}
     metricsNamePrefix: {{ .Values.config.metricsNamePrefix }}
     {{- end }}
-    
+    {{- $fs := .Values.config.fieldSelector }}
+    {{- if and (not $fs) .Values.config.excludeComponents }}
+      {{- $parts := list }}
+      {{- range .Values.config.excludeComponents }}
+        {{- $parts = append $parts (printf "source!=%s" .) }}
+      {{- end }}
+      {{- $fs = join "," $parts }}
+    {{- end }}
+    {{- if $fs }}
+    fieldSelector: {{ $fs | quote }}
+    {{- end }}
+
     route:
+      {{- if .Values.config.drop }}
+      drop:
+        {{- toYaml .Values.config.drop | nindent 8 }}
+      {{- end }}
       routes:
         {{- range .Values.routes }}
+        {{- if .drop }}
+        - drop:
+            {{- toYaml .drop | nindent 12 }}
+          match:
+            {{- toYaml .match | nindent 12 }}
+        {{- else }}
         - match:
-            {{- range .match }}
-            - receiver: {{ .receiver | quote }}
-            {{- end }}
+            {{- toYaml .match | nindent 12 }}
+        {{- end }}
         {{- end }}
     
     receivers:

@@ -8,6 +8,7 @@ import (
 	"github.com/rs/zerolog/log"
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/errors"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/dynamic"
 	"k8s.io/client-go/informers"
 	"k8s.io/client-go/kubernetes"
@@ -32,9 +33,19 @@ type EventWatcher struct {
 	clientset           *kubernetes.Clientset
 }
 
-func NewEventWatcher(config *rest.Config, namespace string, MaxEventAgeSeconds int64, metricsStore *metrics.Store, fn EventHandler, omitLookup bool, cacheSize int) *EventWatcher {
+func NewEventWatcher(config *rest.Config, namespace string, MaxEventAgeSeconds int64, metricsStore *metrics.Store, fn EventHandler, omitLookup bool, cacheSize int, fieldSelector string) *EventWatcher {
 	clientset := kubernetes.NewForConfigOrDie(config)
-	factory := informers.NewSharedInformerFactoryWithOptions(clientset, 0, informers.WithNamespace(namespace))
+
+	factoryOpts := []informers.SharedInformerOption{
+		informers.WithNamespace(namespace),
+	}
+	if fieldSelector != "" {
+		log.Info().Str("fieldSelector", fieldSelector).Msg("applying server-side field selector to Events watch")
+		factoryOpts = append(factoryOpts, informers.WithTweakListOptions(func(opts *metav1.ListOptions) {
+			opts.FieldSelector = fieldSelector
+		}))
+	}
+	factory := informers.NewSharedInformerFactoryWithOptions(clientset, 0, factoryOpts...)
 	informer := factory.Core().V1().Events().Informer()
 
 	watcher := &EventWatcher{
