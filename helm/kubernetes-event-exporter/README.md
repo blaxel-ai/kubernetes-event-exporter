@@ -155,6 +155,7 @@ existingConfigMap: "my-event-exporter-config"
 | `config.logLevel` | See values.yaml | `"debug"` |
 | `config.maxEventAgeSeconds` | See values.yaml | `60` |
 | `config.metricsNamePrefix` | See values.yaml | `"event_exporter_"` |
+| `config.reasonAllowlist` | reasonAllowlist is a regex evaluated client-side against event.Reason before any route processing. Events whose reason does not match are dropped before they reach any receiver. When empty, the binary applies its built-in default (DefaultReasonAllowlist in pkg/exporter/config.go) which matches the reasons consumed by the controlplane job analyzer. Set to ".*" to disable. | `""` |
 | `eventbridge.detailType` | See values.yaml | `"CloudEvent"` |
 | `eventbridge.enabled` | Enable AWS EventBridge integration | `true` |
 | `eventbridge.eventBusName` | See values.yaml | `"default"` |

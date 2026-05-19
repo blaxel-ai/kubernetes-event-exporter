@@ -32,6 +32,9 @@ data:
     {{- if $fs }}
     fieldSelector: {{ $fs | quote }}
     {{- end }}
+    {{- if .Values.config.reasonAllowlist }}
+    reasonAllowlist: {{ .Values.config.reasonAllowlist | quote }}
+    {{- end }}
 
     route:
       {{- if .Values.config.drop }}

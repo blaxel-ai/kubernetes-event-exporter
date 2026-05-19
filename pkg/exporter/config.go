@@ -15,11 +15,16 @@ import (
 const (
 	DefaultCacheSize = 1024
 	// DefaultFieldSelector is applied when Config.FieldSelector is empty.
-	// persistentvolume-controller is almost always the noisiest source on
-	// real clusters and is filtered out by default. Users that genuinely
-	// want those events can override by setting FieldSelector explicitly
+	// These sources/reasons are by far the noisiest on real clusters and
+	// are filtered out server-side by default. Users that genuinely want
+	// those events can override by setting FieldSelector explicitly
 	// (any non-empty value disables this default).
-	DefaultFieldSelector = "source!=persistentvolume-controller"
+	DefaultFieldSelector = "source!=persistentvolume-controller,reason!=ProviderUpdateSuccess,reason!=ProviderDeleteSuccess"
+	// DefaultReasonAllowlist drops any event whose reason does not match
+	// this regex before it reaches the user's route engine. The set matches
+	// the reasons consumed by the controlplane job analyzer. To disable,
+	// set Config.ReasonAllowlist to ".*" (or any always-true regex).
+	DefaultReasonAllowlist = "^(Scheduled|Pulling|Pulled|ProviderCreateSuccess|Created|Running|Succeeded|Completed|Failed|BackOff|FailedMount|FailedAttachVolume|Killing|Preempting|Terminated|OOMKilled|FailedScheduling|Error)$"
 )
 
 // Config allows configuration
@@ -47,6 +52,10 @@ type Config struct {
 	// See https://kubernetes.io/docs/concepts/overview/working-with-objects/field-selectors/
 	// When empty, defaults to DefaultFieldSelector. Set any non-empty value to opt out.
 	FieldSelector string `yaml:"fieldSelector,omitempty"`
+	// ReasonAllowlist is a regex evaluated against event.Reason before any route
+	// processing. Events that do not match are dropped (and never reach a receiver).
+	// When empty, defaults to DefaultReasonAllowlist. To disable, set to ".*".
+	ReasonAllowlist string `yaml:"reasonAllowlist,omitempty"`
 }
 
 func (c *Config) SetDefaults() {
@@ -58,6 +67,11 @@ func (c *Config) SetDefaults() {
 	if c.FieldSelector == "" {
 		c.FieldSelector = DefaultFieldSelector
 		log.Info().Str("fieldSelector", c.FieldSelector).Msg("setting config.fieldSelector (default)")
+	}
+
+	if c.ReasonAllowlist == "" {
+		c.ReasonAllowlist = DefaultReasonAllowlist
+		log.Info().Str("reasonAllowlist", c.ReasonAllowlist).Msg("setting config.reasonAllowlist (default)")
 	}
 
 	if c.KubeBurst == 0 {

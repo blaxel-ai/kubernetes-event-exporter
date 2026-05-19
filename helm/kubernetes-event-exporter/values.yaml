@@ -84,6 +84,12 @@ config:
   # Selectable fields on core/v1 Events include: involvedObject.kind,
   # involvedObject.namespace, involvedObject.name, reason, source, type.
   fieldSelector: ""
+  # reasonAllowlist is a regex evaluated client-side against event.Reason before
+  # any route processing. Events whose reason does not match are dropped before
+  # they reach any receiver. When empty, the binary applies its built-in default
+  # (DefaultReasonAllowlist in pkg/exporter/config.go) which matches the reasons
+  # consumed by the controlplane job analyzer. Set to ".*" to disable.
+  reasonAllowlist: ""
 
 # AWS Configuration for EventBridge
 aws:
