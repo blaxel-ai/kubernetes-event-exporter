@@ -2,6 +2,7 @@ package exporter
 
 import (
 	"reflect"
+	"regexp"
 
 	"github.com/blaxel-ai/kubernetes-event-exporter/pkg/kube"
 	"github.com/rs/zerolog/log"
@@ -9,8 +10,9 @@ import (
 
 // Engine is responsible for initializing the receivers from sinks
 type Engine struct {
-	Route    Route
-	Registry ReceiverRegistry
+	Route           Route
+	Registry        ReceiverRegistry
+	ReasonAllowlist *regexp.Regexp
 }
 
 func NewEngine(config *Config, registry ReceiverRegistry) *Engine {
@@ -28,14 +30,28 @@ func NewEngine(config *Config, registry ReceiverRegistry) *Engine {
 		registry.Register(v.Name, sink)
 	}
 
+	var allowlist *regexp.Regexp
+	if config.ReasonAllowlist != "" {
+		compiled, err := regexp.Compile(config.ReasonAllowlist)
+		if err != nil {
+			log.Fatal().Err(err).Str("reasonAllowlist", config.ReasonAllowlist).Msg("invalid reasonAllowlist regex")
+		}
+		allowlist = compiled
+	}
+
 	return &Engine{
-		Route:    config.Route,
-		Registry: registry,
+		Route:           config.Route,
+		Registry:        registry,
+		ReasonAllowlist: allowlist,
 	}
 }
 
 // OnEvent does not care whether event is add or update. Prior filtering should be done in the controller/watcher
 func (e *Engine) OnEvent(event *kube.EnhancedEvent) {
+	if e.ReasonAllowlist != nil && !e.ReasonAllowlist.MatchString(event.Reason) {
+		log.Debug().Str("reason", event.Reason).Msg("event dropped by reasonAllowlist")
+		return
+	}
 	e.Route.ProcessEvent(event, e.Registry)
 }
 
