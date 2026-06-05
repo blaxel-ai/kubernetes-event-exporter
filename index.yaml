@@ -3,7 +3,7 @@ entries:
   kubernetes-event-exporter:
   - apiVersion: v2
     appVersion: 1.0.4
-    created: "2026-05-19T10:23:12.784753844Z"
+    created: "2026-06-05T04:16:05.359668357Z"
     description: A Helm chart for Kubernetes Event Exporter
     digest: f4f11d4ac728ca1d0ff496a524cff57efd337810ce179f3491e8bebfb2efdc99
     home: https://github.com/blaxel-ai/kubernetes-event-exporter
@@ -25,7 +25,7 @@ entries:
     version: 1.0.4
   - apiVersion: v2
     appVersion: 1.0.3
-    created: "2026-05-19T10:23:12.783807614Z"
+    created: "2026-06-05T04:16:05.358214221Z"
     description: A Helm chart for Kubernetes Event Exporter
     digest: 2c8d453c9247ca943ac7e0cd26a5d5748d03941b4f85dec8ea0fe3ae8c93cbb1
     home: https://github.com/blaxel-ai/kubernetes-event-exporter
@@ -47,7 +47,7 @@ entries:
     version: 1.0.3
   - apiVersion: v2
     appVersion: 1.0.2
-    created: "2026-05-19T10:23:12.782617217Z"
+    created: "2026-06-05T04:16:05.357447505Z"
     description: A Helm chart for Kubernetes Event Exporter
     digest: 4752ff19c2e3a54e9f735027c358b7dc5917ee54f267686817a981dd84cd335f
     home: https://github.com/blaxel-ai/kubernetes-event-exporter
@@ -69,7 +69,7 @@ entries:
     version: 1.0.2
   - apiVersion: v2
     appVersion: 1.0.1
-    created: "2026-05-19T10:23:12.781870774Z"
+    created: "2026-06-05T04:16:05.356658336Z"
     description: A Helm chart for Kubernetes Event Exporter
     digest: e8d893befe1a3ff6f8439829218920855334e2e1823b2baa1d094d379c521342
     home: https://github.com/blaxel-ai/kubernetes-event-exporter
@@ -333,7 +333,7 @@ entries:
     version: 0.1.0-dev-3265487
   - apiVersion: v2
     appVersion: latest
-    created: "2026-05-19T10:23:12.780273623Z"
+    created: "2026-06-05T04:16:05.355841555Z"
     description: A Helm chart for Kubernetes Event Exporter
     digest: 7a1715802c2998ed9f583b566c80755bc034baebd9cf82e478394418c5b44afc
     home: https://github.com/blaxel-ai/kubernetes-event-exporter
@@ -355,7 +355,7 @@ entries:
     version: 0.1.0-ce17579
   - apiVersion: v2
     appVersion: latest
-    created: "2026-05-19T10:23:12.779476425Z"
+    created: "2026-06-05T04:16:05.355030583Z"
     description: A Helm chart for Kubernetes Event Exporter
     digest: f8c4261b51837bcdf87d5c416d52d829e3b35210d8c56db89d29be968c33b0e7
     home: https://github.com/blaxel-ai/kubernetes-event-exporter
@@ -377,7 +377,29 @@ entries:
     version: 0.1.0-ac865fd
   - apiVersion: v2
     appVersion: latest
-    created: "2026-05-19T10:23:12.778467339Z"
+    created: "2026-06-05T04:16:05.354099383Z"
+    description: A Helm chart for Kubernetes Event Exporter
+    digest: 90a5bb65298e3f1138ad1d8053616cf096f71ac355ffa115390a6ef1d3631364
+    home: https://github.com/blaxel-ai/kubernetes-event-exporter
+    keywords:
+    - kubernetes
+    - events
+    - monitoring
+    - eventbridge
+    - exporter
+    maintainers:
+    - email: support@blaxel.ai
+      name: Blaxel AI
+    name: kubernetes-event-exporter
+    sources:
+    - https://github.com/blaxel-ai/kubernetes-event-exporter
+    type: application
+    urls:
+    - https://blaxel-ai.github.io/kubernetes-event-exporter/kubernetes-event-exporter-0.1.0-6bc451e.tgz
+    version: 0.1.0-6bc451e
+  - apiVersion: v2
+    appVersion: latest
+    created: "2026-06-05T04:16:05.353249874Z"
     description: A Helm chart for Kubernetes Event Exporter
     digest: 650bc07b3ecb87742754a356cd6599620c55cb3eea83cfbfc62c20cc653a9e74
     home: https://github.com/blaxel-ai/kubernetes-event-exporter
@@ -399,7 +421,7 @@ entries:
     version: 0.1.0-64951fd
   - apiVersion: v2
     appVersion: latest
-    created: "2026-05-19T10:23:12.777665573Z"
+    created: "2026-06-05T04:16:05.352449919Z"
     description: A Helm chart for Kubernetes Event Exporter
     digest: 38f865f1c504a3a161065332982726995aa650efcef86f7f07f4b157c2b46a8e
     home: https://github.com/blaxel-ai/kubernetes-event-exporter
@@ -419,4 +441,4 @@ entries:
     urls:
     - https://blaxel-ai.github.io/kubernetes-event-exporter/kubernetes-event-exporter-0.1.0-33dc2c1.tgz
     version: 0.1.0-33dc2c1
-generated: "2026-05-19T10:23:12.776723612Z"
+generated: "2026-06-05T04:16:05.351424659Z"
