@@ -1,4 +1,4 @@
-FROM golang:1.24 AS builder
+FROM golang:1.26 AS builder
 
 ARG VERSION
 ENV PKG github.com/blaxel-ai/kubernetes-event-exporter/pkg
