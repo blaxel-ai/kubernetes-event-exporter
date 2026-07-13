@@ -1,8 +1,6 @@
 module github.com/blaxel-ai/kubernetes-event-exporter
 
-go 1.24.0
-
-toolchain go1.24.3
+go 1.25
 
 require (
 	cloud.google.com/go/bigquery v1.69.0
@@ -19,8 +17,8 @@ require (
 	github.com/prometheus/client_golang v1.22.0
 	github.com/prometheus/exporter-toolkit v0.14.0
 	github.com/rs/zerolog v1.34.0
-	github.com/slack-go/slack v0.17.3
-	github.com/stretchr/testify v1.10.0
+	github.com/slack-go/slack v0.27.0
+	github.com/stretchr/testify v1.11.1
 	github.com/xdg-go/scram v1.1.2
 	google.golang.org/api v0.241.0
 	gopkg.in/natefinch/lumberjack.v2 v2.2.1
