@@ -85,7 +85,7 @@ func bigQueryWriteBatchToJsonFile(items []interface{}, path string) error {
 func bigQueryCreateDataset(cfg *BigQueryConfig) error {
 	ctx := context.Background()
 
-	client, err := bigquery.NewClient(ctx, cfg.Project, option.WithCredentialsFile(cfg.CredentialsPath))
+	client, err := bigquery.NewClient(ctx, cfg.Project, option.WithAuthCredentialsFile(option.ServiceAccount, cfg.CredentialsPath))
 	if err != nil {
 		return fmt.Errorf("bigquery.NewClient: %v", err)
 	}
@@ -100,7 +100,7 @@ func bigQueryCreateDataset(cfg *BigQueryConfig) error {
 
 func bigQueryImportJsonFromFile(path string, cfg *BigQueryConfig) error {
 	ctx := context.Background()
-	client, err := bigquery.NewClient(ctx, cfg.Project, option.WithCredentialsFile(cfg.CredentialsPath))
+	client, err := bigquery.NewClient(ctx, cfg.Project, option.WithAuthCredentialsFile(option.ServiceAccount, cfg.CredentialsPath))
 	if err != nil {
 		return fmt.Errorf("bigquery.NewClient: %v", err)
 	}
