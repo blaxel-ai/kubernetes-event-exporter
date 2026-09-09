@@ -62,6 +62,32 @@ func TestRawJSONTemplatePreservesInvolvedObjectLabels(t *testing.T) {
 	}`, string(payload))
 }
 
+func TestRawJSONTemplateAllowsSurroundingWhitespace(t *testing.T) {
+	ev := &kube.EnhancedEvent{}
+	ev.InvolvedObject.Labels = map[string]string{"execution-id": "exec-with-hyphens"}
+
+	res, err := convertLayoutTemplate(map[string]interface{}{
+		"labels": "  {{ rawJson .InvolvedObject.Labels }}\n",
+	}, ev)
+	require.NoError(t, err)
+
+	labels, ok := res["labels"].(map[string]interface{})
+	require.True(t, ok, "standalone rawJson with surrounding whitespace must remain a JSON object")
+	require.Equal(t, "exec-with-hyphens", labels["execution-id"])
+}
+
+func TestMixedRawJSONTemplateRemainsString(t *testing.T) {
+	ev := &kube.EnhancedEvent{}
+	ev.InvolvedObject.Labels = map[string]string{"execution-id": "exec-with-hyphens"}
+
+	res, err := convertLayoutTemplate(map[string]interface{}{
+		"message": "labels={{ rawJson .InvolvedObject.Labels }}",
+	}, ev)
+	require.NoError(t, err)
+	require.IsType(t, "", res["message"])
+	require.Contains(t, res["message"], rawJSONTemplatePrefix)
+}
+
 func TestRawJSONTemplatePreservesNilInvolvedObjectLabels(t *testing.T) {
 	ev := &kube.EnhancedEvent{}
 

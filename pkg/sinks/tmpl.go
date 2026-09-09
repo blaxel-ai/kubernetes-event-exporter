@@ -20,6 +20,11 @@ func rawJSONTemplateValue(value interface{}) (string, error) {
 	return rawJSONTemplatePrefix + string(b), nil
 }
 
+func isStandaloneRawJSONTemplate(text string) bool {
+	trimmed := strings.TrimSpace(text)
+	return strings.HasPrefix(trimmed, "{{") && strings.HasSuffix(trimmed, "}}") && strings.Contains(trimmed, "rawJson")
+}
+
 func GetString(event *kube.EnhancedEvent, text string) (string, error) {
 	funcs := sprig.TxtFuncMap()
 	funcs["rawJson"] = rawJSONTemplateValue
@@ -60,8 +65,8 @@ func convertTemplate(value interface{}, ev *kube.EnhancedEvent) (interface{}, er
 			return nil, err
 		}
 
-		if strings.Contains(v, "rawJson") {
-			if rawJSON, ok := strings.CutPrefix(rendered, rawJSONTemplatePrefix); ok {
+		if isStandaloneRawJSONTemplate(v) {
+			if rawJSON, ok := strings.CutPrefix(strings.TrimSpace(rendered), rawJSONTemplatePrefix); ok {
 				var decoded interface{}
 				if err := json.Unmarshal([]byte(rawJSON), &decoded); err != nil {
 					return nil, err
