@@ -75,6 +75,8 @@ jobs:
           tags: ${{ steps.set-tags.outputs.GHCR_TAG }}
           build-args: |
             VERSION=${{ github.sha }}
+          cache-from: type=registry,ref=ghcr.io/${{ github.repository }}:buildcache-${{ github.ref_name }}
+          cache-to: type=registry,ref=ghcr.io/${{ github.repository }}:buildcache-${{ github.ref_name }},mode=max
 
   helm-publish:
     name: Publish Helm Chart
