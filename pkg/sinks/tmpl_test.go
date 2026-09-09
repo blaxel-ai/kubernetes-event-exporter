@@ -1,6 +1,7 @@
 package sinks
 
 import (
+	"encoding/json"
 	"testing"
 	"time"
 
@@ -8,6 +9,96 @@ import (
 	"github.com/stretchr/testify/require"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
+
+func TestRawJSONTemplatePreservesInvolvedObjectLabels(t *testing.T) {
+	ev := &kube.EnhancedEvent{}
+	ev.InvolvedObject.Kind = "Pod"
+	ev.InvolvedObject.Name = "job-render-summary-ws123-exec-abc-123-7f9c4"
+	ev.InvolvedObject.Namespace = "test-my-workspace"
+	ev.InvolvedObject.Labels = map[string]string{
+		"workspace":    "my-workspace",
+		"job":          "render-summary",
+		"execution-id": "exec-abc-123",
+		"escaped":      `quote " slash \\ newline \n`,
+	}
+
+	layout := map[string]interface{}{
+		"data": map[interface{}]interface{}{
+			"involvedObject": map[interface{}]interface{}{
+				"kind":   "{{ .InvolvedObject.Kind }}",
+				"name":   "{{ .InvolvedObject.Name }}",
+				"labels": "{{ rawJson .InvolvedObject.Labels }}",
+			},
+		},
+	}
+
+	res, err := convertLayoutTemplate(layout, ev)
+	require.NoError(t, err)
+
+	data := res["data"].(map[string]interface{})
+	involvedObject := data["involvedObject"].(map[string]interface{})
+	labels, ok := involvedObject["labels"].(map[string]interface{})
+	require.True(t, ok, "labels must remain a JSON object, not a JSON-encoded string")
+	require.Equal(t, "my-workspace", labels["workspace"])
+	require.Equal(t, "render-summary", labels["job"])
+	require.Equal(t, "exec-abc-123", labels["execution-id"])
+	require.Equal(t, ev.InvolvedObject.Labels["escaped"], labels["escaped"])
+
+	payload, err := json.Marshal(res)
+	require.NoError(t, err)
+	require.JSONEq(t, `{
+		"data": {
+			"involvedObject": {
+				"kind": "Pod",
+				"name": "job-render-summary-ws123-exec-abc-123-7f9c4",
+				"labels": {
+					"workspace": "my-workspace",
+					"job": "render-summary",
+					"execution-id": "exec-abc-123",
+					"escaped": "quote \" slash \\\\ newline \\n"
+				}
+			}
+		}
+	}`, string(payload))
+}
+
+func TestRawJSONTemplatePreservesNilInvolvedObjectLabels(t *testing.T) {
+	ev := &kube.EnhancedEvent{}
+
+	res, err := convertLayoutTemplate(map[string]interface{}{
+		"involvedObject": map[interface{}]interface{}{
+			"labels": "{{ rawJson .InvolvedObject.Labels }}",
+		},
+	}, ev)
+	require.NoError(t, err)
+
+	involvedObject := res["involvedObject"].(map[string]interface{})
+	require.Contains(t, involvedObject, "labels")
+	require.Nil(t, involvedObject["labels"])
+
+	payload, err := json.Marshal(res)
+	require.NoError(t, err)
+	require.JSONEq(t, `{"involvedObject":{"labels":null}}`, string(payload))
+}
+
+func TestStaticRawJSONPrefixStringRemainsString(t *testing.T) {
+	res, err := convertLayoutTemplate(map[string]interface{}{
+		"message": rawJSONTemplatePrefix + `{"not":"a-template"}`,
+	}, &kube.EnhancedEvent{})
+	require.NoError(t, err)
+	require.Equal(t, rawJSONTemplatePrefix+`{"not":"a-template"}`, res["message"])
+}
+
+func TestTemplateJSONLookingStringsRemainStrings(t *testing.T) {
+	ev := &kube.EnhancedEvent{}
+	ev.Count = 12
+
+	res, err := convertLayoutTemplate(map[string]interface{}{
+		"count": "{{ .Count }}",
+	}, ev)
+	require.NoError(t, err)
+	require.Equal(t, "12", res["count"])
+}
 
 func TestLayoutConvert(t *testing.T) {
 	ev := &kube.EnhancedEvent{}
