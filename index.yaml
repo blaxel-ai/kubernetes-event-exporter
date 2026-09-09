@@ -3,7 +3,7 @@ entries:
   kubernetes-event-exporter:
   - apiVersion: v2
     appVersion: 1.0.4
-    created: "2026-08-17T22:28:57.726670038Z"
+    created: "2026-09-09T18:20:20.130338587Z"
     description: A Helm chart for Kubernetes Event Exporter
     digest: f4f11d4ac728ca1d0ff496a524cff57efd337810ce179f3491e8bebfb2efdc99
     home: https://github.com/blaxel-ai/kubernetes-event-exporter
@@ -25,7 +25,7 @@ entries:
     version: 1.0.4
   - apiVersion: v2
     appVersion: 1.0.3
-    created: "2026-08-17T22:28:57.72606056Z"
+    created: "2026-09-09T18:20:20.129548378Z"
     description: A Helm chart for Kubernetes Event Exporter
     digest: 2c8d453c9247ca943ac7e0cd26a5d5748d03941b4f85dec8ea0fe3ae8c93cbb1
     home: https://github.com/blaxel-ai/kubernetes-event-exporter
@@ -47,7 +47,7 @@ entries:
     version: 1.0.3
   - apiVersion: v2
     appVersion: 1.0.2
-    created: "2026-08-17T22:28:57.725468398Z"
+    created: "2026-09-09T18:20:20.128103232Z"
     description: A Helm chart for Kubernetes Event Exporter
     digest: 4752ff19c2e3a54e9f735027c358b7dc5917ee54f267686817a981dd84cd335f
     home: https://github.com/blaxel-ai/kubernetes-event-exporter
@@ -69,7 +69,7 @@ entries:
     version: 1.0.2
   - apiVersion: v2
     appVersion: 1.0.1
-    created: "2026-08-17T22:28:57.724857968Z"
+    created: "2026-09-09T18:20:20.127342667Z"
     description: A Helm chart for Kubernetes Event Exporter
     digest: e8d893befe1a3ff6f8439829218920855334e2e1823b2baa1d094d379c521342
     home: https://github.com/blaxel-ai/kubernetes-event-exporter
@@ -177,6 +177,28 @@ entries:
     urls:
     - https://blaxel-ai.github.io/kubernetes-event-exporter/kubernetes-event-exporter-0.1.0-dev-f9f0b47.tgz
     version: 0.1.0-dev-f9f0b47
+  - apiVersion: v2
+    appVersion: latest
+    created: "2026-09-09T18:20:20.126559801Z"
+    description: A Helm chart for Kubernetes Event Exporter
+    digest: 49b515ac84be661a58b463650784a3fea258afa431d975f84acde0adc76611c9
+    home: https://github.com/blaxel-ai/kubernetes-event-exporter
+    keywords:
+    - kubernetes
+    - events
+    - monitoring
+    - eventbridge
+    - exporter
+    maintainers:
+    - email: support@blaxel.ai
+      name: Blaxel AI
+    name: kubernetes-event-exporter
+    sources:
+    - https://github.com/blaxel-ai/kubernetes-event-exporter
+    type: application
+    urls:
+    - https://blaxel-ai.github.io/kubernetes-event-exporter/kubernetes-event-exporter-0.1.0-dev-e7c48e6.tgz
+    version: 0.1.0-dev-e7c48e6
   - apiVersion: v2
     appVersion: latest
     created: "2025-07-15T01:44:31.157474806Z"
@@ -421,7 +443,7 @@ entries:
     version: 0.1.0-ac865fd
   - apiVersion: v2
     appVersion: latest
-    created: "2026-08-17T22:28:57.723544662Z"
+    created: "2026-09-09T18:20:20.125705602Z"
     description: A Helm chart for Kubernetes Event Exporter
     digest: 506ae656c32177421b8ba44bce1c18e057dac9161818d61d6ff219f3b4ce5ed8
     home: https://github.com/blaxel-ai/kubernetes-event-exporter
@@ -443,7 +465,7 @@ entries:
     version: 0.1.0-8af9175
   - apiVersion: v2
     appVersion: latest
-    created: "2026-08-17T22:28:57.722399752Z"
+    created: "2026-09-09T18:20:20.124867653Z"
     description: A Helm chart for Kubernetes Event Exporter
     digest: 90a5bb65298e3f1138ad1d8053616cf096f71ac355ffa115390a6ef1d3631364
     home: https://github.com/blaxel-ai/kubernetes-event-exporter
@@ -465,7 +487,7 @@ entries:
     version: 0.1.0-6bc451e
   - apiVersion: v2
     appVersion: latest
-    created: "2026-08-17T22:28:57.721726459Z"
+    created: "2026-09-09T18:20:20.124050713Z"
     description: A Helm chart for Kubernetes Event Exporter
     digest: 650bc07b3ecb87742754a356cd6599620c55cb3eea83cfbfc62c20cc653a9e74
     home: https://github.com/blaxel-ai/kubernetes-event-exporter
@@ -487,7 +509,7 @@ entries:
     version: 0.1.0-64951fd
   - apiVersion: v2
     appVersion: latest
-    created: "2026-08-17T22:28:57.72108967Z"
+    created: "2026-09-09T18:20:20.123225879Z"
     description: A Helm chart for Kubernetes Event Exporter
     digest: 38f865f1c504a3a161065332982726995aa650efcef86f7f07f4b157c2b46a8e
     home: https://github.com/blaxel-ai/kubernetes-event-exporter
@@ -507,4 +529,4 @@ entries:
     urls:
     - https://blaxel-ai.github.io/kubernetes-event-exporter/kubernetes-event-exporter-0.1.0-33dc2c1.tgz
     version: 0.1.0-33dc2c1
-generated: "2026-08-17T22:28:57.720326063Z"
+generated: "2026-09-09T18:20:20.122277064Z"
