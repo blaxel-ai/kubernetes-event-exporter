@@ -50,6 +50,10 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           build-args: |
             VERSION=${{ github.ref_name }}
+          cache-from: |
+            type=registry,ref=ghcr.io/${{ github.repository }}:buildcache-release
+            type=registry,ref=ghcr.io/${{ github.repository }}:buildcache-main
+          cache-to: type=registry,ref=ghcr.io/${{ github.repository }}:buildcache-release,mode=max
 
   helm-release:
     name: Release Helm Chart

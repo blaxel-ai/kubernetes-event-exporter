@@ -3,14 +3,33 @@ package sinks
 import (
 	"bytes"
 	"encoding/json"
+	"strings"
 	"text/template"
 
 	"github.com/Masterminds/sprig/v3"
 	"github.com/blaxel-ai/kubernetes-event-exporter/pkg/kube"
 )
 
+const rawJSONTemplatePrefix = "__kubernetes_event_exporter_raw_json__:"
+
+func rawJSONTemplateValue(value interface{}) (string, error) {
+	b, err := json.Marshal(value)
+	if err != nil {
+		return "", err
+	}
+	return rawJSONTemplatePrefix + string(b), nil
+}
+
+func isStandaloneRawJSONTemplate(text string) bool {
+	trimmed := strings.TrimSpace(text)
+	return strings.HasPrefix(trimmed, "{{") && strings.HasSuffix(trimmed, "}}") && strings.Contains(trimmed, "rawJson")
+}
+
 func GetString(event *kube.EnhancedEvent, text string) (string, error) {
-	tmpl, err := template.New("template").Funcs(sprig.TxtFuncMap()).Parse(text)
+	funcs := sprig.TxtFuncMap()
+	funcs["rawJson"] = rawJSONTemplateValue
+
+	tmpl, err := template.New("template").Funcs(funcs).Parse(text)
 	if err != nil {
 		return "", err
 	}
@@ -44,6 +63,16 @@ func convertTemplate(value interface{}, ev *kube.EnhancedEvent) (interface{}, er
 		rendered, err := GetString(ev, v)
 		if err != nil {
 			return nil, err
+		}
+
+		if isStandaloneRawJSONTemplate(v) {
+			if rawJSON, ok := strings.CutPrefix(strings.TrimSpace(rendered), rawJSONTemplatePrefix); ok {
+				var decoded interface{}
+				if err := json.Unmarshal([]byte(rawJSON), &decoded); err != nil {
+					return nil, err
+				}
+				return decoded, nil
+			}
 		}
 
 		return rendered, nil
