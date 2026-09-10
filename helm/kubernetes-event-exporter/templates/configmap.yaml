@@ -84,6 +84,7 @@ data:
                 namespace: "{{ "{{ .InvolvedObject.Namespace }}" }}"
                 apiVersion: "{{ "{{ .InvolvedObject.APIVersion }}" }}"
                 uid: "{{ "{{ .InvolvedObject.UID }}" }}"
+                labels: "{{ "{{ rawJson .InvolvedObject.Labels }}" }}"
               source:
                 component: "{{ "{{ .Source.Component }}" }}"
                 host: "{{ "{{ .Source.Host }}" }}"
