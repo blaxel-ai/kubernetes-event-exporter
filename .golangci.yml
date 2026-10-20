@@ -1,0 +1,13 @@
+# golangci-lint v2 configuration: v1 (last: v1.64.8) cannot load Go 1.27 export data.
+# Keeps the v1 defaults: staticcheck SA + S1 only, v1 default exclusions.
+version: "2"
+linters:
+  settings:
+    staticcheck:
+      checks: ["all", "-ST*", "-QF*"]
+  exclusions:
+    presets:
+      - comments
+      - common-false-positives
+      - legacy
+      - std-error-handling

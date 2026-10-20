@@ -1,5 +1,5 @@
 # syntax=docker/dockerfile:1.7
-FROM golang:1.25 AS builder
+FROM golang:1.27.3 AS builder
 
 ENV PKG github.com/blaxel-ai/kubernetes-event-exporter/pkg
 

@@ -27,7 +27,7 @@ lint: ## Run lint
 	golangci-lint run ./...
 
 install-lint: ## Install lint
-	go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
+	go install github.com/golangci/golangci-lint/v2/cmd/golangci-lint@v2.15.0
 
 .PHONY: help
 help: ## Display this help.
