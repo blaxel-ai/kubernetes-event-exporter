@@ -2,6 +2,8 @@ module github.com/blaxel-ai/kubernetes-event-exporter
 
 go 1.25.0
 
+toolchain go1.27.3
+
 require (
 	cloud.google.com/go/bigquery v1.79.1
 	cloud.google.com/go/pubsub/v2 v2.6.0
