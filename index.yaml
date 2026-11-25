@@ -3,7 +3,7 @@ entries:
   kubernetes-event-exporter:
   - apiVersion: v2
     appVersion: 1.0.4
-    created: "2026-10-21T02:13:52.621052313Z"
+    created: "2026-11-25T00:39:17.435148452Z"
     description: A Helm chart for Kubernetes Event Exporter
     digest: f4f11d4ac728ca1d0ff496a524cff57efd337810ce179f3491e8bebfb2efdc99
     home: https://github.com/blaxel-ai/kubernetes-event-exporter
@@ -25,7 +25,7 @@ entries:
     version: 1.0.4
   - apiVersion: v2
     appVersion: 1.0.3
-    created: "2026-10-21T02:13:52.620270531Z"
+    created: "2026-11-25T00:39:17.434369781Z"
     description: A Helm chart for Kubernetes Event Exporter
     digest: 2c8d453c9247ca943ac7e0cd26a5d5748d03941b4f85dec8ea0fe3ae8c93cbb1
     home: https://github.com/blaxel-ai/kubernetes-event-exporter
@@ -47,7 +47,7 @@ entries:
     version: 1.0.3
   - apiVersion: v2
     appVersion: 1.0.2
-    created: "2026-10-21T02:13:52.619454686Z"
+    created: "2026-11-25T00:39:17.433594345Z"
     description: A Helm chart for Kubernetes Event Exporter
     digest: 4752ff19c2e3a54e9f735027c358b7dc5917ee54f267686817a981dd84cd335f
     home: https://github.com/blaxel-ai/kubernetes-event-exporter
@@ -69,7 +69,7 @@ entries:
     version: 1.0.2
   - apiVersion: v2
     appVersion: 1.0.1
-    created: "2026-10-21T02:13:52.618663466Z"
+    created: "2026-11-25T00:39:17.432770589Z"
     description: A Helm chart for Kubernetes Event Exporter
     digest: e8d893befe1a3ff6f8439829218920855334e2e1823b2baa1d094d379c521342
     home: https://github.com/blaxel-ai/kubernetes-event-exporter
@@ -553,7 +553,7 @@ entries:
     version: 0.1.0-8af9175
   - apiVersion: v2
     appVersion: latest
-    created: "2026-10-21T02:13:52.616949692Z"
+    created: "2026-11-25T00:39:17.431938699Z"
     description: A Helm chart for Kubernetes Event Exporter
     digest: 90a5bb65298e3f1138ad1d8053616cf096f71ac355ffa115390a6ef1d3631364
     home: https://github.com/blaxel-ai/kubernetes-event-exporter
@@ -575,7 +575,7 @@ entries:
     version: 0.1.0-6bc451e
   - apiVersion: v2
     appVersion: latest
-    created: "2026-10-21T02:13:52.615906752Z"
+    created: "2026-11-25T00:39:17.431032519Z"
     description: A Helm chart for Kubernetes Event Exporter
     digest: 2daeee143b975576e9403455e81619d10f3606f27e684fab0991e730b3161806
     home: https://github.com/blaxel-ai/kubernetes-event-exporter
@@ -597,7 +597,7 @@ entries:
     version: 0.1.0-6a9476d
   - apiVersion: v2
     appVersion: latest
-    created: "2026-10-21T02:13:52.613946655Z"
+    created: "2026-11-25T00:39:17.430034479Z"
     description: A Helm chart for Kubernetes Event Exporter
     digest: 650bc07b3ecb87742754a356cd6599620c55cb3eea83cfbfc62c20cc653a9e74
     home: https://github.com/blaxel-ai/kubernetes-event-exporter
@@ -619,7 +619,7 @@ entries:
     version: 0.1.0-64951fd
   - apiVersion: v2
     appVersion: latest
-    created: "2026-10-21T02:13:52.613149725Z"
+    created: "2026-11-25T00:39:17.428546808Z"
     description: A Helm chart for Kubernetes Event Exporter
     digest: 38f865f1c504a3a161065332982726995aa650efcef86f7f07f4b157c2b46a8e
     home: https://github.com/blaxel-ai/kubernetes-event-exporter
@@ -639,4 +639,26 @@ entries:
     urls:
     - https://blaxel-ai.github.io/kubernetes-event-exporter/kubernetes-event-exporter-0.1.0-33dc2c1.tgz
     version: 0.1.0-33dc2c1
-generated: "2026-10-21T02:13:52.612080165Z"
+  - apiVersion: v2
+    appVersion: latest
+    created: "2026-11-25T00:39:17.426948629Z"
+    description: A Helm chart for Kubernetes Event Exporter
+    digest: 1fb0457de505d2a9ddcbd7a647f418ca6a27a0cd66bede1cb49a6533c934949b
+    home: https://github.com/blaxel-ai/kubernetes-event-exporter
+    keywords:
+    - kubernetes
+    - events
+    - monitoring
+    - eventbridge
+    - exporter
+    maintainers:
+    - email: support@blaxel.ai
+      name: Blaxel AI
+    name: kubernetes-event-exporter
+    sources:
+    - https://github.com/blaxel-ai/kubernetes-event-exporter
+    type: application
+    urls:
+    - https://blaxel-ai.github.io/kubernetes-event-exporter/kubernetes-event-exporter-0.1.0-0c2c480.tgz
+    version: 0.1.0-0c2c480
+generated: "2026-11-25T00:39:17.42573144Z"
